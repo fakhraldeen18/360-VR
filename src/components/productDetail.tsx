@@ -12,11 +12,16 @@ import {
 } from "@/components/ui/accordion"
 import { ApertureIcon, MinusIcon, PlusIcon, WeightIcon } from "lucide-react"
 import { Label } from "./ui/label"
-import { ProductCards } from "./productCard"
+import { useContext, useState } from "react"
+import { GlobalContext } from "@/App"
 
 export default function ProductDetail() {
+  const context = useContext(GlobalContext)
+  if (!context) throw Error("COntext is missing")
+  const { handleAddCart } = context
+
   const params = useParams()
-  console.log("params:", params)
+
   const getProducts = async () => {
     try {
       const res = await api.get("/product")
@@ -32,14 +37,20 @@ export default function ProductDetail() {
     queryKey: ["product"],
     queryFn: getProducts
   })
-  console.log("products:", products)
+
+  const [quantity, setQuantity] = useState(1)
+  console.log("quantity:", quantity)
+
+  const handelDecreesQuantity = () => {
+    if (quantity === 1) return
+    setQuantity(quantity - 1)
+  }
 
   const product = products?.find((p) => p.inventoryId === params.productID)
   if (!product) {
     return <div>product not found !!!</div>
   }
 
-  console.log("products:", products)
   return (
     <div>
       <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 mt-8">
@@ -63,23 +74,35 @@ export default function ProductDetail() {
                 Quantity
               </Label>
               <div className="col-span-3 flex items-center gap-2">
-                <Button className="w-6 h-6 rounded-full" size="icon" variant="outline">
+                <Button
+                  className="w-6 h-6 rounded-full"
+                  size="icon"
+                  variant="outline"
+                  onClick={handelDecreesQuantity}
+                >
                   <MinusIcon className="w-4 h-4" />
                 </Button>
                 <Input
                   className="w-16 text-center"
                   defaultValue="1"
+                  value={quantity}
                   id="quantity"
                   max="10"
                   min="1"
                   type="number"
+                  onChange={(e) => setQuantity(Number(e.target.value))}
                 />
-                <Button className="w-6 h-6 rounded-full" size="icon" variant="outline">
+                <Button
+                  className="w-6 h-6 rounded-full"
+                  size="icon"
+                  variant="outline"
+                  onClick={() => setQuantity(quantity + 1)}
+                >
                   <PlusIcon className="w-4 h-4" />
                 </Button>
               </div>
             </div>
-            <h3 className=" text-2xl font-bold">SR {product.price}</h3>
+            <h3 className=" text-2xl font-bold">SR{product.price * quantity}</h3>
           </div>
           <Accordion collapsible type="single">
             <AccordionItem value="specs">
@@ -109,7 +132,9 @@ export default function ProductDetail() {
             </AccordionItem>
           </Accordion>
           <div className="flex gap-4">
-            <Button size="lg">Add to Cart</Button>
+            <Button size="lg" onClick={() => handleAddCart(product)}>
+              Add to Cart
+            </Button>
             <Button size="lg" variant="outline">
               Buy Now
             </Button>

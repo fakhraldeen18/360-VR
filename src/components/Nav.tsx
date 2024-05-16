@@ -1,11 +1,26 @@
-import React from "react"
-import { Navbar, MobileNav, Typography, Button, IconButton } from "@material-tailwind/react"
+import React, { useContext } from "react"
+import { Navbar, Typography, IconButton, Collapse } from "@material-tailwind/react"
 import logoImage from "../assets/Images/logo.png"
 import { Link } from "react-router-dom"
+import { GlobalContext } from "@/App"
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
+import { MinusIcon, PlusIcon, ShoppingCartIcon, TrashIcon, UserIcon } from "lucide-react"
+import { Button } from "./ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from "./ui/dropdown-menu"
 
 export function Nav() {
-  const [openNav, setOpenNav] = React.useState(false)
+  const context = useContext(GlobalContext)
+  if (!context) throw Error("COntext is missing")
+  const { state } = context
 
+  const [openNav, setOpenNav] = React.useState(false)
   React.useEffect(() => {
     window.addEventListener("resize", () => window.innerWidth >= 960 && setOpenNav(false))
   }, [])
@@ -18,10 +33,9 @@ export function Nav() {
         color="blue-gray"
         className="flex items-center gap-x-2 p-1 font-medium"
       >
-          <Link to="/products" className="flex items-center">
-            Product
-          </Link>
-
+        <Link to="/products" className="flex items-center">
+          Product
+        </Link>
       </Typography>
       <Typography
         as="li"
@@ -29,7 +43,7 @@ export function Nav() {
         color="blue-gray"
         className="flex items-center gap-x-2 p-1 font-medium"
       >
-        <Link to="#" className="flex items-center">
+        <Link to="/dashboard" className="flex items-center">
           Profile
         </Link>
       </Typography>
@@ -57,39 +71,136 @@ export function Nav() {
   )
 
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-4 py-2 lg:px-8 lg:py-4 roundedLg bg-background">
+    <Navbar className="mx-auto max-w-screen-xl px-4 py-2 lg:px-8 lg:py-4 rounded-lg bg-background ">
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
         <Link to="/">
           <img src={logoImage} alt="logo" className="w-12 h-12 rounded-full " />
         </Link>
         <div className="hidden lg:block">{navList}</div>
         <div className="flex items-center gap-x-1">
-          <Link className="flex items-center hover:text-gray-200 hidden lg:inline-block" to="#">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-              />
-            </svg>
-            <span className="flex absolute -mt-5 ml-4">
-              <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
-            </span>
-          </Link>
-          <Button variant="text" size="sm" className="hidden lg:inline-block">
-            <span>Log In</span>
-          </Button>
-          <Button variant="gradient" size="sm" className="hidden lg:inline-block">
-            <span>Sign in</span>
-          </Button>
+          <section className="hidden lg:inline-block">
+            <Popover>
+              <PopoverTrigger asChild className="  items-center ">
+                <Link className="p-2 hover:bg-slate-900 dark:hover:bg-gray-800 rounded-full" to="#">
+                  <ShoppingCartIcon className="h-6 w-6" />
+                </Link>
+                {/* <Typography className="flex items-center hover:text-gray-200 lg:inline-block  cursor-pointer ">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
+                  {state.cart.length !== 0 && (
+                    <span className="flex absolute -mt-5 ml-4">
+                      <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
+                    </span>
+                  )}
+                </Typography> */}
+              </PopoverTrigger>
+              {/* <PopoverContent className="w-80">
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <h4 className="font-medium leading-none">Cart</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Set the dimensions for the layer.
+                    </p>
+                  </div>
+                  {state.cart.map((item) => (
+                    <div className="grid gap-2" key={item.id}>
+                      <div className="grid grid-cols-3 items-center gap-4">
+                        <p> {item.name}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </PopoverContent> */}
+
+              <PopoverContent align="end" className="w-90 p-4">
+                {state.cart.length === 0 ? (
+                  <p>No Items</p>
+                ) : (
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-medium">Your Cart</h3>
+                      <Link className="text-sm font-medium hover:underline" to="#">
+                        View Cart
+                      </Link>
+                    </div>
+                    {state.cart.map((item) => (
+                      <div key={item.id} className="flex flex-col gap-4">
+                        <div className="flex items-center gap-4">
+                          <img
+                            alt="Product Image"
+                            className="rounded-md"
+                            height={80}
+                            src={item.image}
+                            style={{
+                              aspectRatio: "80/80",
+                              objectFit: "cover"
+                            }}
+                            width={80}
+                          />
+                          <div className="flex-1 text-center">
+                            <h4 className="font-small text-left text">{item.name}</h4>
+                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                              SR {item.price}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button size="icon" variant="ghost">
+                              <MinusIcon className="h-4 w-4" />
+                            </Button>
+                            <span>1</span>
+                            <Button size="icon" variant="ghost">
+                              <PlusIcon className="h-4 w-4" />
+                            </Button>
+                            <Button className="text-red-600" size="icon" variant="ghost">
+                              <TrashIcon className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                    <div className="flex items-center justify-between">
+                      <p className="text-sm font-medium">Total</p>
+                      <p className="text-sm font-medium">$79.97</p>
+                    </div>
+                    <Button className="w-full">Checkout</Button>
+                  </div>
+                )}
+              </PopoverContent>
+            </Popover>
+          </section>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Typography className="p-2  hover:bg-slate-900 dark:hover:bg-gray-800 rounded-full hidden lg:inline-block">
+                <UserIcon className="h-6 w-6" />
+                <span className="sr-only">Login</span>
+              </Typography>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <Link to="/dashboard">
+                <DropdownMenuItem>profile</DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem>Support</DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <Link to="/SignIn">
+                <DropdownMenuItem>Logout</DropdownMenuItem>
+              </Link>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <IconButton
           variant="text"
@@ -121,7 +232,7 @@ export function Nav() {
           )}
         </IconButton>
       </div>
-      <MobileNav open={openNav}>
+      <Collapse open={openNav}>
         <div className="container mx-auto">
           {navList}
           <div className="flex items-center gap-x-1">
@@ -140,20 +251,10 @@ export function Nav() {
                   d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
                 />
               </svg>
-              <span className="flex absolute -mt-5 ml-4">
-                <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
-              </span>
             </Link>
-            <Button fullWidth variant="text" size="sm" className="">
-              <span>Log In</span>
-            </Button>
-            <Button fullWidth variant="gradient" size="sm" className="">
-              <span>Sign in</span>
-            </Button>
           </div>
         </div>
-      </MobileNav>
+      </Collapse>
     </Navbar>
   )
 }
