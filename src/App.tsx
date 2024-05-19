@@ -13,6 +13,7 @@ import { Dashboard } from "./components/dashboard"
 export type GlobalContextType = {
   state: GlobalState
   handleAddCart: (product: Product) => void
+  handelDeleteItemFromCart: (inventoryId: string) => void
 }
 export type GlobalState = {
   cart: Product[]
@@ -25,7 +26,7 @@ function App() {
   })
 
   const handleAddCart = (product: Product) => {
-    const isDuplicated = state.cart.find((item) => item.id === product.id)
+    const isDuplicated = state.cart.find((item) => item.inventoryId === product.inventoryId)
     if (isDuplicated) return
 
     setState({
@@ -33,22 +34,31 @@ function App() {
       cart: [...state.cart, product]
     })
   }
+
+  const handelDeleteItemFromCart = (inventoryId: string) => {
+    const deleteItem = state.cart.filter((item) => item.inventoryId !== inventoryId)
+    setState({
+      ...state,
+      cart: deleteItem
+    })
+  }
   return (
     <div className="App">
-      <GlobalContext.Provider value={{ state, handleAddCart }}>
+      <GlobalContext.Provider value={{ state, handleAddCart, handelDeleteItemFromCart }}>
         <BrowserRouter>
           <Nav />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductCards />} />
             <Route path="/products/:productID" element={<ProductDetail />} />
-            <Route path="/products/dashboard" element={<Dashboard />} />
           </Routes>
           <Footer />
+          {/* <Routes>
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes> */}
         </BrowserRouter>
       </GlobalContext.Provider>
     </div>
   )
 }
-
 export default App

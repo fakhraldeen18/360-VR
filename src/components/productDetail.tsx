@@ -17,7 +17,7 @@ import { GlobalContext } from "@/App"
 
 export default function ProductDetail() {
   const context = useContext(GlobalContext)
-  if (!context) throw Error("COntext is missing")
+  if (!context) throw Error("Context is missing")
   const { handleAddCart } = context
 
   const params = useParams()
