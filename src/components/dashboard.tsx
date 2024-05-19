@@ -55,11 +55,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 import { Link } from "react-router-dom"
 import api from "@/api"
-import { useQuery } from "@tanstack/react-query"
-import { Product } from "@/types"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { Category, Product } from "@/types"
 import AddProduct from "./addProduct"
+import { DeleteProduct } from "./deleteProduct"
+import { useState } from "react"
+import { EditProduct } from "./editProduct"
 
 export function Dashboard() {
+  const [menuOpen, setMenuOpen] = useState(true)
+   const handleMenuItemClick = () => {
+     // This function is called when a menu item is clicked
+     setMenuOpen(true)
+   }
+  const queryClient = useQueryClient()
   const getProducts = async () => {
     try {
       const res = await api.get("/product")
@@ -69,11 +78,48 @@ export function Dashboard() {
       return Promise.reject(new Error("Something went wrong"))
     }
   }
+  const getCategories = async () => {
+    try {
+      const res = await api.get("/category")
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
+  }
+  const deleteProduct = async (id: string) => {
+    try {
+      const res = await api.delete(`/product/${id}`)
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
+  }
+
+  const handleDeleteProduct = async (id: string) => {
+    await deleteProduct(id)
+    queryClient.invalidateQueries({ queryKey: ["product"] })
+  }
 
   // Queries
   const { data: products, error } = useQuery<Product[]>({
     queryKey: ["product"],
     queryFn: getProducts
+  })
+  const { data: categories, error: cetError } = useQuery<Category[]>({
+    queryKey: ["category"],
+    queryFn: getCategories
+  })
+
+  const productWithCategories = products?.map((product) => {
+    const category = categories?.find((c) => c.id === product.categoryId)
+    if (category)
+      return {
+        ...product,
+        categoryId: category.type
+      }
+    return product
   })
 
   return (
@@ -338,13 +384,11 @@ export function Dashboard() {
                         <TableHead className=" text-center">Category</TableHead>
                         <TableHead className=" text-center">Price</TableHead>
                         <TableHead className="hidden md:table-cell text-center">quantity</TableHead>
-                        <TableHead>
-                          <span className="sr-only">Actions</span>
-                        </TableHead>
+                        <TableHead className=" text-center">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {products?.map((product) => (
+                      {productWithCategories?.map((product) => (
                         <TableRow key={product.inventoryId}>
                           <TableCell className="hidden sm:table-cell">
                             <img
@@ -360,7 +404,7 @@ export function Dashboard() {
                           <TableCell>SR{product.price}</TableCell>
                           <TableCell className="hidden md:table-cell">{product.quantity}</TableCell>
                           <TableCell>
-                            <DropdownMenu>
+                            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
                               <DropdownMenuTrigger asChild>
                                 <Button aria-haspopup="true" size="icon" variant="ghost">
                                   <MoreHorizontal className="h-4 w-4" />
@@ -369,8 +413,17 @@ export function Dashboard() {
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>Delete</DropdownMenuItem>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                  <EditProduct
+                                    product={product}
+                                  />
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                                  <DeleteProduct
+                                    product={product}
+                                    handleDeleteProduct={() => handleDeleteProduct(product.id)}
+                                  />
+                                </DropdownMenuItem>
                               </DropdownMenuContent>
                             </DropdownMenu>
                           </TableCell>
@@ -389,7 +442,7 @@ export function Dashboard() {
           </Tabs>
         </main>
       </div>
-      <AddProduct/>
+      <AddProduct />
     </div>
   )
 }

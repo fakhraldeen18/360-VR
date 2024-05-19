@@ -5,8 +5,13 @@ export type Product = {
   image: string
   size: string
   price: number
-  categoryId: number
+  categoryId: string
   description: string
   color: string
-  quantity:number
+  quantity: number
+}
+
+export type Category = {
+  id: string
+  type: string
 }
