@@ -84,7 +84,7 @@ export function EditProduct({ product }: { product: Product }) {
           Edit
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[825px]">
+      <DialogContent className="max-w-[325px] md:max-w-[825px]">
         <DialogHeader>
           <DialogTitle>Edit Product</DialogTitle>
           <DialogDescription>
@@ -104,7 +104,7 @@ export function EditProduct({ product }: { product: Product }) {
               onChange={handleChange}
             />
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
+          <div className=" grid grid-cols-4 items-center gap-4">
             <Label htmlFor="description" className="text-right">
               Description
             </Label>
@@ -134,7 +134,7 @@ export function EditProduct({ product }: { product: Product }) {
             </Label>
             <Select onValueChange={handleSelect}>
               <SelectTrigger id="category" className="w-[180px] col-span-3">
-                <SelectValue placeholder="Select category"/>
+                <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup defaultValue={updatedProduct.categoryId}>

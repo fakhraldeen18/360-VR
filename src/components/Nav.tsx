@@ -179,7 +179,7 @@ export function Nav() {
               </Link>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Link to="/SignIn">
+              <Link to="/login">
                 <DropdownMenuItem>Logout</DropdownMenuItem>
               </Link>
             </DropdownMenuContent>

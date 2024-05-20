@@ -15,3 +15,10 @@ export type Category = {
   id: string
   type: string
 }
+export type User = {
+  id: string
+  role: string
+  name: string
+  email: string
+  phone: string
+}

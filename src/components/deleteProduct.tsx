@@ -26,7 +26,7 @@ export function DeleteProduct({
           Delete
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="max-w-[325px] md:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Delete Product ?</DialogTitle>
           <DialogDescription>

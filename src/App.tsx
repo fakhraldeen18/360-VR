@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { Home } from "./Pages/Home"
+import { Home } from "./Pages/home"
 import { Footer } from "./components/footer"
 import { Nav } from "./components/nav"
 import { ProductCards } from "./components/productCard"
@@ -9,6 +9,8 @@ import "./App.css"
 import { createContext, useState } from "react"
 import { Product } from "./types"
 import { Dashboard } from "./components/dashboard"
+import {Login} from "./Pages/login"
+import {SignUp} from "./Pages/signUp"
 
 export type GlobalContextType = {
   state: GlobalState
@@ -46,16 +48,19 @@ function App() {
     <div className="App">
       <GlobalContext.Provider value={{ state, handleAddCart, handelDeleteItemFromCart }}>
         <BrowserRouter>
-          {/* <Nav />
+          <Nav />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/products" element={<ProductCards />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/signUp" element={<SignUp />} />
             <Route path="/products/:productID" element={<ProductDetail />} />
           </Routes>
-          <Footer /> */}
-          <Routes>
+          <Footer />
+          {/* <Routes>
             <Route path="/dashboard" element={<Dashboard />} />
-          </Routes>
+          </Routes> */}
         </BrowserRouter>
       </GlobalContext.Provider>
     </div>

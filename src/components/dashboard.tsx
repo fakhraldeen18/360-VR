@@ -14,7 +14,6 @@ import {
   Users2
 } from "lucide-react"
 
-import { Badge } from "@/components/ui/badge"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -53,25 +52,50 @@ import {
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import api from "@/api"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Category, Product } from "@/types"
+import { Category, Product, User } from "@/types"
 import AddProduct from "./addProduct"
 import { DeleteProduct } from "./deleteProduct"
-import { useState } from "react"
+import { ChangeEvent, FormEvent, useState } from "react"
 import { EditProduct } from "./editProduct"
 
 export function Dashboard() {
-  const [menuOpen, setMenuOpen] = useState(true)
-   const handleMenuItemClick = () => {
-     // This function is called when a menu item is clicked
-     setMenuOpen(true)
-   }
+  const [searchParams, setSearchParams] = useSearchParams()
+  const defaultSearch = searchParams.get("searchBy") || ""
+  const [searchBy, setSearchBy] = useState(defaultSearch)
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    setSearchBy(value)
+  }
+  const handleSearch = (e:FormEvent) => {
+    e.preventDefault()
+    queryClient.invalidateQueries({ queryKey: ["product"] })
+    setSearchParams({
+      ...searchParams,
+      searchBy:searchBy 
+    })
+  }
   const queryClient = useQueryClient()
   const getProducts = async () => {
     try {
-      const res = await api.get("/product")
+      const res = await api.get(`/product?search=${searchBy}`)
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
+  }
+  const getUsers = async () => {
+    try {
+      const token = localStorage.getItem("token")
+      const res = await api.get(`/user`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
       return res.data
     } catch (error) {
       console.error(error)
@@ -110,6 +134,10 @@ export function Dashboard() {
   const { data: categories, error: cetError } = useQuery<Category[]>({
     queryKey: ["category"],
     queryFn: getCategories
+  })
+  const { data: users, error: userError } = useQuery<User[]>({
+    queryKey: ["user"],
+    queryFn: getUsers
   })
 
   const productWithCategories = products?.map((product) => {
@@ -228,7 +256,7 @@ export function Dashboard() {
       </aside>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          {/* <Sheet>
+          <Sheet>
             <SheetTrigger asChild>
               <Button size="icon" variant="outline" className="sm:hidden">
                 <PanelLeft className="h-5 w-5" />
@@ -278,8 +306,8 @@ export function Dashboard() {
                 </Link>
               </nav>
             </SheetContent>
-          </Sheet> */}
-          {/* <Breadcrumb className="hidden md:flex">
+          </Sheet>
+          <Breadcrumb className="hidden md:flex">
             <BreadcrumbList>
               <BreadcrumbItem>
                 <BreadcrumbLink asChild>
@@ -297,19 +325,32 @@ export function Dashboard() {
                 <BreadcrumbPage>All Products</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
-          </Breadcrumb> */}
+          </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              type="search"
-              placeholder="Search..."
-              className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-            />
+            <form onSubmit={handleSearch} className="flex gap-4">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                type="search"
+                placeholder="Search..."
+                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
+                value={searchBy}
+                onChange={handleChange}
+              />
+              <Button
+                variant="outline"
+                type="submit"
+                size="sm"
+                className="h-10 -ml-2 text-center gap-1"
+              >
+                <span className="">Search</span>
+              </Button>
+            </form>
           </div>
-          {/* <DropdownMenu>
+
+          <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                <Image
+                <img
                   src="/placeholder-user.jpg"
                   width={36}
                   height={36}
@@ -326,21 +367,21 @@ export function Dashboard() {
               <DropdownMenuSeparator />
               <DropdownMenuItem>Logout</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu> */}
+          </DropdownMenu>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Tabs defaultValue="all">
             <div className="flex items-center">
-              {/* <TabsList>
+              <TabsList>
                 <TabsTrigger value="all">All</TabsTrigger>
                 <TabsTrigger value="active">Active</TabsTrigger>
                 <TabsTrigger value="draft">Draft</TabsTrigger>
                 <TabsTrigger value="archived" className="hidden sm:flex">
                   Archived
                 </TabsTrigger>
-              </TabsList> */}
+              </TabsList>
               <div className="ml-auto flex items-center gap-2">
-                {/* <DropdownMenu>
+                <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="h-7 gap-1">
                       <ListFilter className="h-3.5 w-3.5" />
@@ -358,7 +399,7 @@ export function Dashboard() {
                 <Button size="sm" variant="outline" className="h-7 gap-1">
                   <File className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
-                </Button> */}
+                </Button>
                 <Button size="sm" className="h-7 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
                   <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Product</span>
@@ -382,9 +423,11 @@ export function Dashboard() {
                         </TableHead>
                         <TableHead className=" text-center">Name</TableHead>
                         <TableHead className=" text-center">Category</TableHead>
-                        <TableHead className=" text-center">Price</TableHead>
+                        <TableHead className="hidden md:table-cell text-center">Price</TableHead>
                         <TableHead className="hidden md:table-cell text-center">quantity</TableHead>
-                        <TableHead className=" text-center">Actions</TableHead>
+                        <TableHead className=" text-center">
+                          <span className="sr-only">Actions</span>
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -401,10 +444,10 @@ export function Dashboard() {
                           </TableCell>
                           <TableCell className="font-medium">{product.name}</TableCell>
                           <TableCell>{product.categoryId}</TableCell>
-                          <TableCell>SR{product.price}</TableCell>
+                          <TableCell className="hidden md:table-cell">SR{product.price}</TableCell>
                           <TableCell className="hidden md:table-cell">{product.quantity}</TableCell>
                           <TableCell>
-                            <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
+                            <DropdownMenu>
                               <DropdownMenuTrigger asChild>
                                 <Button aria-haspopup="true" size="icon" variant="ghost">
                                   <MoreHorizontal className="h-4 w-4" />
@@ -414,9 +457,7 @@ export function Dashboard() {
                               <DropdownMenuContent align="end">
                                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                                  <EditProduct
-                                    product={product}
-                                  />
+                                  <EditProduct product={product} />
                                 </DropdownMenuItem>
                                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
                                   <DeleteProduct
