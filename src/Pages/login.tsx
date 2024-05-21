@@ -1,12 +1,21 @@
+import { GlobalContext } from "@/App"
 import api from "@/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { decodeUser } from "@/lib/utils"
+import jwtDecode from "jwt-decode"
+import { ChangeEvent, FormEvent, useContext, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 export function Login() {
+  const context = useContext(GlobalContext)
+  if (!context) throw Error("COntext is missing")
+  const { handleStoreUser,state } = context
+
+  console.log('state:', state.user)
+
   const navigate = useNavigate()
   const [login, setLogin] = useState({
     email: "",
@@ -28,6 +37,11 @@ export function Login() {
     const token = await handleLogIn()
     if (token) {
       localStorage.setItem("token", token)
+      const decode = jwtDecode(token)
+      const decodedUserToken = decodeUser(decode)
+      localStorage.setItem("decodedUserToken", JSON.stringify(decodedUserToken))
+
+      handleStoreUser(decodedUserToken)
       navigate("/")
     }
   }

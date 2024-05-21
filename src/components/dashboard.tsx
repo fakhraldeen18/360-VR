@@ -58,10 +58,16 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Category, Product, User } from "@/types"
 import AddProduct from "./addProduct"
 import { DeleteProduct } from "./deleteProduct"
-import { ChangeEvent, FormEvent, useState } from "react"
+import { ChangeEvent, FormEvent, useContext, useState } from "react"
 import { EditProduct } from "./editProduct"
+import jwtDecode from "jwt-decode"
+import { GlobalContext } from "@/App"
 
 export function Dashboard() {
+  const context = useContext(GlobalContext)
+  if (!context) throw Error("COntext is missing")
+  const { handleRemoveUser,state } = context
+
   const [searchParams, setSearchParams] = useSearchParams()
   const defaultSearch = searchParams.get("searchBy") || ""
   const [searchBy, setSearchBy] = useState(defaultSearch)
@@ -70,12 +76,12 @@ export function Dashboard() {
     const { value } = e.target
     setSearchBy(value)
   }
-  const handleSearch = (e:FormEvent) => {
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault()
     queryClient.invalidateQueries({ queryKey: ["product"] })
     setSearchParams({
       ...searchParams,
-      searchBy:searchBy 
+      searchBy: searchBy
     })
   }
   const queryClient = useQueryClient()
@@ -91,7 +97,7 @@ export function Dashboard() {
   const getUsers = async () => {
     try {
       const token = localStorage.getItem("token")
-      const res = await api.get(`/user`,{
+      const res = await api.get(`/user`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -125,6 +131,12 @@ export function Dashboard() {
     await deleteProduct(id)
     queryClient.invalidateQueries({ queryKey: ["product"] })
   }
+  const handleLogOur = () => {
+    localStorage.removeItem("token")
+    localStorage.removeItem("decodedUserToken")
+    handleRemoveUser()
+    window.location.reload()
+  }
 
   // Queries
   const { data: products, error } = useQuery<Product[]>({
@@ -149,7 +161,6 @@ export function Dashboard() {
       }
     return product
   })
-
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
@@ -360,12 +371,12 @@ export function Dashboard() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>My Account: {state.user?.name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogOur}>Logout</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </header>

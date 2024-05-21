@@ -11,8 +11,10 @@ import { Link } from "react-router-dom"
 export function ProductCards() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("COntext is missing")
+  const { handleAddCart,state } = context
+  console.log('state:', state)
 
-  const { handleAddCart } = context
+
   const getProducts = async () => {
     try {
       const res = await api.get("/product")

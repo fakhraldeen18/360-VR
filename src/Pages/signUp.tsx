@@ -7,7 +7,7 @@ import { ChangeEvent, FormEvent, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 
 export function SignUp() {
-    const navigate = useNavigate()
+  const navigate = useNavigate()
   const [user, setUser] = useState({
     name: "",
     password: "",
@@ -17,8 +17,8 @@ export function SignUp() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     const response = await handleSignUp()
-    if(response){
-        navigate("/login")
+    if (response) {
+      navigate("/login")
     }
   }
   const handleSignUp = async () => {

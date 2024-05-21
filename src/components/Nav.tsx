@@ -14,11 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./ui/dropdown-menu"
+import { stat } from "fs/promises"
 
 export function Nav() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("COntext is missing")
-  const { state, handelDeleteItemFromCart } = context
+  const { state, handelDeleteItemFromCart, handleRemoveUser } = context
 
   const [openNav, setOpenNav] = React.useState(false)
   React.useEffect(() => {
@@ -30,6 +31,12 @@ export function Nav() {
   const handelDecreesQuantity = () => {
     if (quantity === 1) return
     setQuantity(quantity - 1)
+  }
+  const handleLogOur = () =>{
+    localStorage.removeItem("token")
+    localStorage.removeItem("decodedUserToken")
+    handleRemoveUser()
+
   }
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
@@ -172,16 +179,26 @@ export function Nav() {
               </Typography>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>My Account: {state.user?.name}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <Link to="/dashboard">
                 <DropdownMenuItem>profile</DropdownMenuItem>
               </Link>
-              <DropdownMenuItem>Support</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <Link to="/login">
-                <DropdownMenuItem>Logout</DropdownMenuItem>
-              </Link>
+              {!state.user ? (
+                <>
+                  <Link to="/signup">
+                    <DropdownMenuItem>SignUp</DropdownMenuItem>
+                  </Link>
+                  <Link to="/login">
+                    <DropdownMenuItem>LogIn</DropdownMenuItem>
+                  </Link>
+                </>
+              ) : (
+                <Link to="/login">
+                  <DropdownMenuItem onClick={handleLogOur}>Logout</DropdownMenuItem>
+                </Link>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -22,3 +22,16 @@ export type User = {
   email: string
   phone: string
 }
+
+export const ROLE = {
+  Admin: "Admin",
+  Customer: "Customer"
+} as const
+
+export type DecodedUser = {
+  undefined: string
+  emailaddress: string
+  name: string
+  nameidentifier: string
+  role: keyof typeof ROLE
+}
