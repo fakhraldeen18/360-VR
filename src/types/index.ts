@@ -11,7 +11,15 @@ export type Product = {
   quantity: number
 }
 
-export type Category = {
+export type TypeProduct = {
+  id: string
+  categoryId: string
+  name: string
+  description: string
+  image: string
+}
+
+export type TypeCategory = {
   id: string
   type: string
 }
@@ -34,4 +42,13 @@ export type DecodedUser = {
   name: string
   nameidentifier: string
   role: keyof typeof ROLE
+}
+
+export type TypeInventory = {
+  id: string
+  productId: string
+  price: number
+  quantity: number
+  color: string
+  size: string
 }

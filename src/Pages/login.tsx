@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { decodeUser } from "@/lib/utils"
+import { decodeUser } from "@/lib/Utils"
 import jwtDecode from "jwt-decode"
 import { ChangeEvent, FormEvent, useContext, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
@@ -12,9 +12,9 @@ import { Link, useNavigate } from "react-router-dom"
 export function Login() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("COntext is missing")
-  const { handleStoreUser,state } = context
+  const { handleStoreUser, state } = context
 
-  console.log('state:', state.user)
+  console.log("state:", state.user)
 
   const navigate = useNavigate()
   const [login, setLogin] = useState({

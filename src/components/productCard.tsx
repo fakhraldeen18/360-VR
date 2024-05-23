@@ -2,7 +2,7 @@ import { GlobalContext } from "@/App"
 import api from "@/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Product } from "@/types"
+import { Product } from "@/types/Index"
 import { CardBody, Typography } from "@material-tailwind/react"
 import { useQuery } from "@tanstack/react-query"
 import { useContext } from "react"
@@ -11,9 +11,8 @@ import { Link } from "react-router-dom"
 export function ProductCards() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("COntext is missing")
-  const { handleAddCart,state } = context
-  console.log('state:', state)
-
+  const { handleAddCart, state } = context
+  console.log("state:", state)
 
   const getProducts = async () => {
     try {

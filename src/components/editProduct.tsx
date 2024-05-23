@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Category, Product } from "@/types"
+import { TypeCategory, Product, TypeProduct } from "@/types/Index"
 import {
   Select,
   SelectContent,
@@ -24,7 +24,7 @@ import api from "@/api"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { ChangeEvent, useState } from "react"
 
-export function EditProduct({ product }: { product: Product }) {
+export function EditProduct({ product }: { product: TypeProduct }) {
   const queryClient = useQueryClient()
   const [updatedProduct, setUpdatedProduct] = useState(product)
   const updateProduct = async () => {
@@ -45,7 +45,7 @@ export function EditProduct({ product }: { product: Product }) {
       return Promise.reject(new Error("Something went wrong"))
     }
   }
-  const { data: categories, error: cetError } = useQuery<Category[]>({
+  const { data: categories, error: cetError } = useQuery<TypeCategory[]>({
     queryKey: ["category"],
     queryFn: getCategories
   })
@@ -72,7 +72,7 @@ export function EditProduct({ product }: { product: Product }) {
     })
   }
   const handleUpdate = async () => {
-    // console.log(updatedProduct)
+    console.log(updatedProduct)
     await updateProduct()
     queryClient.invalidateQueries({ queryKey: ["product"] })
   }

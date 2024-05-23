@@ -1,7 +1,7 @@
-import { decodeUser } from "@/lib/utils"
-import { ROLE } from "@/types"
+import { decodeUser } from "@/lib/Utils"
+import { ROLE } from "@/types/Index"
 import jwtDecode from "jwt-decode"
-import  { ReactElement } from "react"
+import { ReactElement } from "react"
 import { Navigate } from "react-router-dom"
 
 export default function PrivateRoute({ children }: { children: ReactElement }) {

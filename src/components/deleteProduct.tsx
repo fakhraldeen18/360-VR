@@ -10,13 +10,13 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Product } from "@/types"
+import { TypeProduct } from "@/types/Index"
 
 export function DeleteProduct({
   product,
   handleDeleteProduct
 }: {
-  product: Product
+  product: TypeProduct
   handleDeleteProduct: (id: string) => void
 }) {
   return (

@@ -2,7 +2,6 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Button } from "@/components/ui/button"
-import { UploadIcon } from "lucide-react"
 import {
   Select,
   SelectContent,
@@ -12,13 +11,13 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card"
 import { ChangeEvent, FormEvent, useState } from "react"
 import api from "@/api"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Category } from "@/types"
+import { TypeCategory } from "@/types/Index"
+import { Dialog } from "@radix-ui/react-dialog"
+import { DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "./ui/dialog"
 export default function AddProduct() {
-
   const queryClient = useQueryClient()
   const postProduct = async () => {
     try {
@@ -40,7 +39,7 @@ export default function AddProduct() {
     }
   }
 
-  const { data: categories, error: cetError } = useQuery<Category[]>({
+  const { data: categories, error: cetError } = useQuery<TypeCategory[]>({
     queryKey: ["category"],
     queryFn: getCategories
   })
@@ -57,7 +56,7 @@ export default function AddProduct() {
     console.log("product:", product)
     await postProduct()
 
-    queryClient.invalidateQueries({ queryKey: ["product"] })
+    queryClient.invalidateQueries({ queryKey: ["productNoneJoin"] })
   }
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -76,85 +75,89 @@ export default function AddProduct() {
 
   const handleSelect = (value: string) => {
     setProduct({
-     ...product,
+      ...product,
       categoryId: value
     })
   }
   return (
-    <main className="container mx-auto px-4 py-8 md:px-6 md:py-12 text-left">
-      <div className="max-w-2xl mx-auto">
-        <Card x-chunk="dashboard-06-chunk-3">
-          <CardHeader>
-            <CardTitle className=" text-center">Add New Product</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form className="space-y-6" onSubmit={handleSubmit}>
-              <div className="flex flex-col space-y-1.5">
-                <Label className="block mb-2 font-medium" htmlFor="name">
-                  Product Name
-                </Label>
-                <Input
-                  name="name"
-                  id="name"
-                  placeholder="Enter product name"
-                  type="text"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label className="block mb-2 font-medium" htmlFor="description">
-                  Description
-                </Label>
-                <Textarea
-                  name="description"
-                  id="description"
-                  placeholder="Enter product description"
-                  rows={4}
-                  onChange={handleChangeTextArea}
-                />
-              </div>
-              <div className="flex flex-col space-y-1.5">
-                <Label className="block mb-2 font-medium" htmlFor="price">
-                  Image URL
-                </Label>
-                <Input
-                  name="image"
-                  id="image"
-                  placeholder="Enter product image"
-                  type="text"
-                  onChange={handleChange}
-                />
-              </div>
-              <div className=" w-full flex flex-col space-y-1.5">
-                <Label htmlFor="category">Category</Label>
-                <Select onValueChange={handleSelect}>
-                  <SelectTrigger id="category" className="w-[180px]">
-                    <SelectValue placeholder="Select category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      <SelectLabel>Categories</SelectLabel>
-                      {categories?.map((category) => (
-                        <SelectItem key={category.id} value={category.id}>
-                          {category.type}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="flex justify-between ">
-                <Button className="w-1/2 mr-5" type="submit">
-                  Save Product
-                </Button>
-                <Button className="w-1/2" variant="outline" type="reset">
-                  Reset
-                </Button>
-              </div>
-            </form>
-          </CardContent>
-        </Card>
-      </div>
-    </main>
+    <Dialog>
+      <DialogTrigger asChild>
+        <span>Add Product</span>
+      </DialogTrigger>
+      <DialogContent className="max-w-[325px] md:max-w-[725px]">
+        <DialogHeader>
+          <DialogTitle className=" text-center">Add New Product</DialogTitle>
+        </DialogHeader>
+        <div className="grid gap-4 py-4">
+          <form className="space-y-6" onSubmit={handleSubmit}>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="block mb-2 font-medium" htmlFor="name">
+                Product Name
+              </Label>
+              <Input
+                name="name"
+                id="name"
+                placeholder="Enter product name"
+                type="text"
+                className="col-span-3 h-40rounded-lg"
+                onChange={handleChange}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="block mb-2 font-medium" htmlFor="description">
+                Description
+              </Label>
+              <Textarea
+                name="description"
+                id="description"
+                placeholder="Enter product description"
+                rows={4}
+                className="col-span-3 h-40rounded-lg"
+                onChange={handleChangeTextArea}
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label className="block mb-2 font-medium" htmlFor="price">
+                Image URL
+              </Label>
+              <Input
+                name="image"
+                id="image"
+                placeholder="Enter product image"
+                type="text"
+                className="col-span-3 h-40rounded-lg"
+                onChange={handleChange}
+              />
+            </div>
+            <div className=" w-full grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="category">Category</Label>
+              <Select onValueChange={handleSelect}>
+                <SelectTrigger id="category" className="w-[180px]">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Categories</SelectLabel>
+                    {categories?.map((category) => (
+                      <SelectItem key={category.id} value={category.id}>
+                        {category.type}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex justify-between ">
+              <Button className="w-1/2 mr-5" type="submit">
+                Save Product
+              </Button>
+              <Button className="w-1/2" variant="outline" type="reset">
+                Reset
+              </Button>
+            </div>
+          </form>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }

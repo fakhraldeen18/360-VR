@@ -1,5 +1,5 @@
 import api from "@/api"
-import { Product } from "@/types"
+import { Product } from "@/types/Index"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import { Input } from "./ui/input"

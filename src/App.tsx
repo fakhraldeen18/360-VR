@@ -1,22 +1,30 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { Home } from "./Pages/home"
-import { Footer } from "./components/footer"
-import { Nav } from "./components/nav"
-import { ProductCards } from "./components/productCard"
-import ProductDetail from "./components/productDetail"
+import { Home } from "./Pages/Home"
+import { Footer } from "./components/Footer"
+import { Nav } from "./components/Nav"
+import { ProductCards } from "./components/ProductCard"
+import ProductDetail from "./components/ProductDetail"
 
 import "./App.css"
 import { createContext, useEffect, useState } from "react"
-import { DecodedUser, Product, ROLE } from "./types"
-import { Dashboard } from "./components/dashboard"
-import { Login } from "./Pages/login"
-import { SignUp } from "./Pages/signUp"
-import PrivateRoute from "./context/privateRoute"
+import { DecodedUser, Product, ROLE } from "./types/Index"
+import { Dashboard } from "./components/Dashboard"
+import { Login } from "./Pages/Login"
+import { SignUp } from "./Pages/SignUp"
+import PrivateRoute from "./context/PrivateRoute"
+import { Overview } from "./Pages/Overview"
+import DashNav from "./components/DashNav"
+import { Order } from "./Pages/Order"
+import { Customer } from "./Pages/User"
+import { Category } from "./Pages/Category"
+import { Inventory } from "./Pages/Inventory"
 
 export type GlobalContextType = {
   state: GlobalState
   handleAddCart: (product: Product) => void
   handelDeleteItemFromCart: (inventoryId: string) => void
+  handleDeleteOneFromCart: (inventoryId: string) => void
+  handleRemoveCart: () => void
   handleStoreUser: (user: DecodedUser) => void
   handleRemoveUser: () => void
 }
@@ -44,8 +52,8 @@ function App() {
   }, [])
 
   const handleAddCart = (product: Product) => {
-    const isDuplicated = state.cart.find((item) => item.inventoryId === product.inventoryId)
-    if (isDuplicated) return
+    // const isDuplicated = state.cart.find((item) => item.inventoryId === product.inventoryId)
+    // if (isDuplicated) return
 
     setState({
       ...state,
@@ -58,6 +66,21 @@ function App() {
     setState({
       ...state,
       cart: deleteItem
+    })
+  }
+  const handleDeleteOneFromCart = (inventoryId: string) => {
+    const cart = state.cart
+    const index = state.cart.findIndex((item) => item.inventoryId === inventoryId)
+    cart.splice(index, 1)
+    setState({
+      ...state,
+      cart: cart
+    })
+  }
+  const handleRemoveCart = () => {
+    setState({
+      ...state,
+      cart: []
     })
   }
 
@@ -82,6 +105,8 @@ function App() {
           state,
           handleAddCart,
           handelDeleteItemFromCart,
+          handleDeleteOneFromCart,
+          handleRemoveCart,
           handleStoreUser,
           handleRemoveUser
         }}
@@ -108,8 +133,15 @@ function App() {
           </BrowserRouter>
         ) : (
           <BrowserRouter>
+            <DashNav />
             <Routes>
               <Route path="/" element={<Dashboard />} />
+          <Route path="/home" element={<Home />} />
+              <Route path="/overview" element={<Overview />} />
+              <Route path="/order" element={<Order />} />
+              <Route path="/customer" element={<Customer />} />
+              <Route path="/category" element={<Category />} />
+              <Route path="/inventory" element={<Inventory />} />
             </Routes>
           </BrowserRouter>
         )}

@@ -1,27 +1,16 @@
 import {
-  File,
   Home,
   LineChart,
-  ListFilter,
   MoreHorizontal,
   Package,
-  Package2,
   PanelLeft,
   PlusCircle,
   Search,
-  Settings,
   ShoppingCart,
+  UserIcon,
   Users2
 } from "lucide-react"
 
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator
-} from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import {
   Card,
@@ -33,7 +22,6 @@ import {
 } from "@/components/ui/card"
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
@@ -51,22 +39,22 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip"
 import { Link, useSearchParams } from "react-router-dom"
 import api from "@/api"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { Category, Product, User } from "@/types"
-import AddProduct from "./addProduct"
-import { DeleteProduct } from "./deleteProduct"
+import { TypeCategory, TypeProduct } from "@/types/Index"
+import { DeleteProduct } from "./DeleteProduct"
 import { ChangeEvent, FormEvent, useContext, useState } from "react"
-import { EditProduct } from "./editProduct"
-import jwtDecode from "jwt-decode"
+import { EditProduct } from "./EditProduct"
 import { GlobalContext } from "@/App"
+import logoImage from "../assets/Images/logo.png"
+import { Typography } from "@material-tailwind/react"
+import AddProduct from "./AddProduct"
 
 export function Dashboard() {
   const context = useContext(GlobalContext)
-  if (!context) throw Error("COntext is missing")
-  const { handleRemoveUser,state } = context
+  if (!context) throw Error("Context is missing")
+  const { handleRemoveUser, state } = context
 
   const [searchParams, setSearchParams] = useSearchParams()
   const defaultSearch = searchParams.get("searchBy") || ""
@@ -78,30 +66,17 @@ export function Dashboard() {
   }
   const handleSearch = (e: FormEvent) => {
     e.preventDefault()
-    queryClient.invalidateQueries({ queryKey: ["product"] })
+    queryClient.invalidateQueries({ queryKey: ["productNoneJoin"] })
     setSearchParams({
       ...searchParams,
       searchBy: searchBy
     })
   }
   const queryClient = useQueryClient()
+
   const getProducts = async () => {
     try {
-      const res = await api.get(`/product?search=${searchBy}`)
-      return res.data
-    } catch (error) {
-      console.error(error)
-      return Promise.reject(new Error("Something went wrong"))
-    }
-  }
-  const getUsers = async () => {
-    try {
-      const token = localStorage.getItem("token")
-      const res = await api.get(`/user`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
+      const res = await api.get(`/product/search?searchBy=${searchBy}`)
       return res.data
     } catch (error) {
       console.error(error)
@@ -129,27 +104,25 @@ export function Dashboard() {
 
   const handleDeleteProduct = async (id: string) => {
     await deleteProduct(id)
-    queryClient.invalidateQueries({ queryKey: ["product"] })
+    queryClient.invalidateQueries({ queryKey: ["productNoneJoin"] })
   }
-  const handleLogOur = () => {
+  const handleLogOut = () => {
+    if (typeof window !== undefined) {
+      window.location.reload()
+    }
     localStorage.removeItem("token")
     localStorage.removeItem("decodedUserToken")
     handleRemoveUser()
-    window.location.reload()
   }
 
   // Queries
-  const { data: products, error } = useQuery<Product[]>({
-    queryKey: ["product"],
+  const { data: products, error } = useQuery<TypeProduct[]>({
+    queryKey: ["productNoneJoin"],
     queryFn: getProducts
   })
-  const { data: categories, error: cetError } = useQuery<Category[]>({
+  const { data: categories, error: cetError } = useQuery<TypeCategory[]>({
     queryKey: ["category"],
     queryFn: getCategories
-  })
-  const { data: users, error: userError } = useQuery<User[]>({
-    queryKey: ["user"],
-    queryFn: getUsers
   })
 
   const productWithCategories = products?.map((product) => {
@@ -163,108 +136,6 @@ export function Dashboard() {
   })
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
-      <aside className="fixed inset-y-0 left-0 z-10 hidden w-14 flex-col border-r bg-background sm:flex">
-        <nav className="flex flex-col items-center gap-4 px-2 py-4">
-          <Link
-            to="#"
-            className="group flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:h-8 md:w-8 md:text-base"
-          >
-            <Package2 className="h-4 w-4 transition-all group-hover:scale-110" />
-            <span className="sr-only">Acme Inc</span>
-          </Link>
-          <TooltipProvider>
-            {" "}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Home className="h-5 w-5" />
-                  <span className="sr-only">Dashboard</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Dashboard</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            {" "}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  <span className="sr-only">Orders</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Orders</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            {" "}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Package className="h-5 w-5" />
-                  <span className="sr-only">Products</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Products</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            {" "}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <Users2 className="h-5 w-5" />
-                  <span className="sr-only">Customers</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Customers</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            {" "}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  to="#"
-                  className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                >
-                  <LineChart className="h-5 w-5" />
-                  <span className="sr-only">Analytics</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="right">Analytics</TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <nav className="mt-auto flex flex-col items-center gap-4 px-2 sm:py-5">
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Link
-                    to="#"
-                    className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
-                  >
-                    <Settings className="h-5 w-5" />
-                    <span className="sr-only">Settings</span>
-                  </Link>
-                </TooltipTrigger>
-                <TooltipContent side="right">Settings</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </nav>
-        </nav>
-      </aside>
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
         <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
           <Sheet>
@@ -276,13 +147,9 @@ export function Dashboard() {
             </SheetTrigger>
             <SheetContent side="left" className="sm:max-w-xs">
               <nav className="grid gap-6 text-lg font-medium">
-                <Link
-                  to="#"
-                  className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full bg-primary text-lg font-semibold text-primary-foreground md:text-base"
-                >
-                  <Package2 className="h-5 w-5 transition-all group-hover:scale-110" />
-                  <span className="sr-only">Acme Inc</span>
-                </Link>
+                <Typography className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:text-base">
+                  <img src={logoImage} alt="logo" className="w-8 h-8 rounded-full " />
+                </Typography>
                 <Link
                   to="#"
                   className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
@@ -318,26 +185,7 @@ export function Dashboard() {
               </nav>
             </SheetContent>
           </Sheet>
-          <Breadcrumb className="hidden md:flex">
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="#">Dashboard</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbLink asChild>
-                  <Link to="#">Products</Link>
-                </BreadcrumbLink>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                <BreadcrumbPage>All Products</BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
-          <div className="relative ml-auto flex-1 md:grow-0">
+          <div className="flex gap-2 relative ml-auto flex-1 md:grow-0">
             <form onSubmit={handleSearch} className="flex gap-4">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -356,29 +204,23 @@ export function Dashboard() {
                 <span className="">Search</span>
               </Button>
             </form>
-          </div>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                <img
-                  src="/placeholder-user.jpg"
-                  width={36}
-                  height={36}
-                  alt="Avatar"
-                  className="overflow-hidden rounded-full"
-                />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account: {state.user?.name}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogOur}>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
+                  <UserIcon className="h-6 w-6" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>My Account: {state.user?.name}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleLogOut}>Logout</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Tabs defaultValue="all">
@@ -392,28 +234,11 @@ export function Dashboard() {
                 </TabsTrigger>
               </TabsList>
               <div className="ml-auto flex items-center gap-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="h-7 gap-1">
-                      <ListFilter className="h-3.5 w-3.5" />
-                      <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Filter</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuLabel>Filter by</DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuCheckboxItem checked>Active</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Draft</DropdownMenuCheckboxItem>
-                    <DropdownMenuCheckboxItem>Archived</DropdownMenuCheckboxItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <Button size="sm" variant="outline" className="h-7 gap-1">
-                  <File className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Export</span>
-                </Button>
                 <Button size="sm" className="h-7 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">Add Product</span>
+                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                    <AddProduct />
+                  </span>
                 </Button>
               </div>
             </div>
@@ -434,8 +259,6 @@ export function Dashboard() {
                         </TableHead>
                         <TableHead className=" text-center">Name</TableHead>
                         <TableHead className=" text-center">Category</TableHead>
-                        <TableHead className="hidden md:table-cell text-center">Price</TableHead>
-                        <TableHead className="hidden md:table-cell text-center">quantity</TableHead>
                         <TableHead className=" text-center">
                           <span className="sr-only">Actions</span>
                         </TableHead>
@@ -443,7 +266,7 @@ export function Dashboard() {
                     </TableHeader>
                     <TableBody>
                       {productWithCategories?.map((product) => (
-                        <TableRow key={product.inventoryId}>
+                        <TableRow key={product.id}>
                           <TableCell className="hidden sm:table-cell">
                             <img
                               alt="Product image"
@@ -455,8 +278,6 @@ export function Dashboard() {
                           </TableCell>
                           <TableCell className="font-medium">{product.name}</TableCell>
                           <TableCell>{product.categoryId}</TableCell>
-                          <TableCell className="hidden md:table-cell">SR{product.price}</TableCell>
-                          <TableCell className="hidden md:table-cell">{product.quantity}</TableCell>
                           <TableCell>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
@@ -494,7 +315,6 @@ export function Dashboard() {
           </Tabs>
         </main>
       </div>
-      <AddProduct />
     </div>
   )
 }

@@ -1,11 +1,14 @@
-import React, { useContext, useState } from "react"
+import React, { useContext } from "react"
 import { Navbar, Typography, IconButton, Collapse } from "@material-tailwind/react"
-import logoImage from "../assets/Images/logo.png"
 import { Link } from "react-router-dom"
+import { MinusIcon, PlusIcon, ShoppingCartIcon, TrashIcon, UserIcon } from "lucide-react"
+
 import { GlobalContext } from "@/App"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
-import { MinusIcon, PlusIcon, ShoppingCartIcon, TrashIcon, UserIcon } from "lucide-react"
 import { Button } from "./ui/button"
+import logoImage from "../assets/Images/logo.png"
+import api from "@/api"
+import { Product } from "@/types/Index"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,30 +17,65 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "./ui/dropdown-menu"
-import { stat } from "fs/promises"
 
+type OrderItems = {
+  productId: string
+  quantity: number
+  color: string
+  size: string
+}
+type CheckoutOrder = OrderItems[]
 export function Nav() {
-  const context = useContext(GlobalContext)
-  if (!context) throw Error("COntext is missing")
-  const { state, handelDeleteItemFromCart, handleRemoveUser } = context
-
   const [openNav, setOpenNav] = React.useState(false)
   React.useEffect(() => {
     window.addEventListener("resize", () => window.innerWidth >= 960 && setOpenNav(false))
   }, [])
 
-  const [quantity, setQuantity] = useState(1)
+  const context = useContext(GlobalContext)
+  if (!context) throw Error("COntext is missing")
+  const {
+    state,
+    handelDeleteItemFromCart,
+    handleRemoveUser,
+    handleAddCart,
+    handleDeleteOneFromCart,
+    handleRemoveCart
+  } = context
 
-  const handelDecreesQuantity = () => {
-    if (quantity === 1) return
-    setQuantity(quantity - 1)
+  const groups = state.cart.reduce((acc, obj) => {
+    const key = obj.id
+    const curGroup = acc[key] ?? []
+    return { ...acc, [key]: [...curGroup, obj] }
+  }, {} as { [key: string]: Product[] })
+  const keys = Object.keys(groups)
+  const total = state.cart.reduce((acc, curr) => {
+    return acc + curr.price
+  }, 0)
+
+  const token = localStorage.getItem("token")
+  const handleCheckout = async () => {
+    try {
+      const res = await api.post("/order", checkoutOrder, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      })
+      if (res.status === 201) {
+        handleRemoveCart()
+      }
+      return res.data
+    } catch (error) {
+      console.error(error)
+      return Promise.reject(new Error("Something went wrong"))
+    }
   }
-  const handleLogOur = () =>{
+
+  const handleLogOut = () => {
     localStorage.removeItem("token")
     localStorage.removeItem("decodedUserToken")
     handleRemoveUser()
-
   }
+
   const navList = (
     <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-6">
       <Typography
@@ -82,7 +120,17 @@ export function Nav() {
       </Typography>
     </ul>
   )
-
+  const checkoutOrder: CheckoutOrder = []
+  keys.forEach((key) => {
+    const products = groups[key]
+    const product = products[0]
+    checkoutOrder.push({
+      productId: key,
+      quantity: products.length,
+      color: product.color,
+      size: product.size
+    })
+  })
   return (
     <Navbar className="mx-auto max-w-screen-xl px-4 py-2 lg:px-8 lg:py-4 rounded-lg bg-background ">
       <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
@@ -99,9 +147,9 @@ export function Nav() {
                   to="#"
                 >
                   <ShoppingCartIcon className="h-6 w-6" />
-                  {state.cart.length == 0 ? null : (
+                  {keys.length == 0 ? null : (
                     <span className="absolute -top-2 -right-2 rounded-full bg-pink-500 opacity-75 text-white text-xs px-2 py-1">
-                      {context?.state.cart.length}
+                      {keys.length}
                     </span>
                   )}
                 </Link>
@@ -117,55 +165,66 @@ export function Nav() {
                         View Cart
                       </Link>
                     </div>
-                    {state.cart.map((item) => (
-                      <div key={item.inventoryId} className="flex flex-col gap-4">
-                        <div className="flex items-center gap-4">
-                          <img
-                            alt="Product Image"
-                            className="rounded-md"
-                            height={80}
-                            src={item.image}
-                            style={{
-                              aspectRatio: "80/80",
-                              objectFit: "cover"
-                            }}
-                            width={80}
-                          />
-                          <div className="flex-1 text-center">
-                            <h4 className="font-small text-left text">{item.name}</h4>
-                            <p className="text-sm text-gray-500 dark:text-gray-400">
-                              SR {item.price * quantity}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Button size="icon" variant="ghost" onClick={handelDecreesQuantity}>
-                              <MinusIcon className="h-4 w-4" />
-                            </Button>
-                            <span>{quantity}</span>
-                            <Button
-                              size="icon"
-                              variant="ghost"
-                              onClick={() => setQuantity(quantity + 1)}
-                            >
-                              <PlusIcon className="h-4 w-4" />
-                            </Button>
-                            <Button
-                              className="text-red-600"
-                              size="icon"
-                              variant="ghost"
-                              onClick={() => handelDeleteItemFromCart(item.inventoryId)}
-                            >
-                              <TrashIcon className="h-4 w-4 text-red-600" />
-                            </Button>
+                    {keys.map((key) => {
+                      const products = groups[key]
+                      const product = products[0]
+                      const total = products.reduce((acc, curr) => {
+                        return acc + curr.price
+                      }, 0)
+                      return (
+                        <div key={product.inventoryId} className="flex flex-col gap-4">
+                          <div className="flex items-center gap-4">
+                            <img
+                              alt="Product Image"
+                              className="rounded-md"
+                              height={80}
+                              src={product.image}
+                              style={{
+                                aspectRatio: "80/80",
+                                objectFit: "cover"
+                              }}
+                              width={80}
+                            />
+                            <div className="flex-1 text-center">
+                              <h4 className="font-small text-left text">{product.name}</h4>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">SR {total}</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => handleDeleteOneFromCart(product.inventoryId)}
+                              >
+                                <MinusIcon className="h-4 w-4" />
+                              </Button>
+                              <span>{products.length}</span>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => handleAddCart(product)}
+                              >
+                                <PlusIcon className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                className="text-red-600"
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => handelDeleteItemFromCart(product.inventoryId)}
+                              >
+                                <TrashIcon className="h-4 w-4 text-red-600" />
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      )
+                    })}
                     <div className="flex items-center justify-between">
                       <p className="text-sm font-medium">Total</p>
-                      <p className="text-sm font-medium">$</p>
+                      <p className="text-sm font-medium">SR {total}</p>
                     </div>
-                    <Button className="w-full">Checkout</Button>
+                    <Button className="w-full" onClick={handleCheckout}>
+                      Checkout
+                    </Button>
                   </div>
                 )}
               </PopoverContent>
@@ -196,7 +255,7 @@ export function Nav() {
                 </>
               ) : (
                 <Link to="/login">
-                  <DropdownMenuItem onClick={handleLogOur}>Logout</DropdownMenuItem>
+                  <DropdownMenuItem onClick={handleLogOut}>Logout</DropdownMenuItem>
                 </Link>
               )}
             </DropdownMenuContent>
@@ -258,8 +317,3 @@ export function Nav() {
     </Navbar>
   )
 }
-
-// <span className="flex absolute -mt-5 ml-4">
-//   <span className="animate-ping absolute inline-flex h-3 w-3 rounded-full bg-pink-400 opacity-75"></span>
-//   <span className="relative inline-flex rounded-full h-3 w-3 bg-pink-500"></span>
-// </span>

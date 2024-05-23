@@ -1,5 +1,5 @@
-import { HeroBanner } from "@/components/heroBanner"
-import { ProductCards } from "@/components/productCard"
+import { HeroBanner } from "@/components/HeroBanner"
+import { ProductCards } from "@/components/ProductCard"
 
 export function Home() {
   return (

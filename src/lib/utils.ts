@@ -1,4 +1,4 @@
-import { DecodedUser } from "@/types"
+import { DecodedUser } from "@/types/Index"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
