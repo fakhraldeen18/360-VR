@@ -16,7 +16,7 @@ const LINKS = [
   }
 ]
 const currentYear = new Date().getFullYear()
-export function Footer() {
+export default function Footer() {
   return (
     <footer className="relative w-full mt-40 bg-zinc-900">
       <About/>
