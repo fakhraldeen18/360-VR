@@ -1,5 +1,6 @@
 import { Typography } from "@material-tailwind/react"
 import logoImage from "../assets/Images/logo.png"
+import { About } from "./About"
 const LINKS = [
   {
     title: "Product",
@@ -17,7 +18,8 @@ const LINKS = [
 const currentYear = new Date().getFullYear()
 export function Footer() {
   return (
-    <footer className="relative w-full mt-10">
+    <footer className="relative w-full mt-40 bg-zinc-900">
+      <About/>
       <div className="mx-auto w-full max-w-7xl px-8">
         <div className="grid grid-cols-1 justify-between gap-4 md:grid-cols-2">
           <Typography variant="h5" className="ml-20 mt-10">
@@ -49,7 +51,7 @@ export function Footer() {
             ))}
           </div>
         </div>
-        <div className="mt-12 flex w-full flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flexRow md:justify-between">
+        <div className="mt-6 flex w-full flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flexRow md:justify-between">
           <Typography
             variant="small"
             className="mb-4 text-center font-normal text-blue-gray-900 md:mb-0"

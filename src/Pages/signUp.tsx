@@ -38,69 +38,72 @@ export function SignUp() {
     })
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="mx-auto max-w-sm  mt-16">
-        <CardHeader>
-          <CardTitle className="text-xl">Sign Up</CardTitle>
-          <CardDescription>Enter your information to create an account</CardDescription>
-        </CardHeader>
-        <CardContent className="mt-9">
-          <div className="grid gap-4 text-left">
-            <div className="grid gap-2">
-              <Label htmlFor="name">name</Label>
-              <Input
-                name="name"
-                id="name"
-                type="text"
-                placeholder="Max Robinson"
-                required
-                onChange={handleChange}
-              />
-            </div>
-            <div className="grid gap-2">
+    <div className=" flex flex-col justify-between">
+      <></>
+      <form onSubmit={handleSubmit}>
+        <Card className="mx-auto max-w-sm lg:mt-32">
+          <CardHeader>
+            <CardTitle className="text-xl">Sign Up</CardTitle>
+            <CardDescription>Enter your information to create an account</CardDescription>
+          </CardHeader>
+          <CardContent className="mt-9">
+            <div className="grid gap-4 text-left">
               <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="name">name</Label>
                 <Input
-                  name="email"
-                  id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  name="name"
+                  id="name"
+                  type="text"
+                  placeholder="Max Robinson"
                   required
                   onChange={handleChange}
                 />
               </div>
-              <Label htmlFor="phone">Phone</Label>
-              <Input
-                name="phone"
-                id="phone"
-                type="number"
-                placeholder="966501234567"
-                required
-                onChange={handleChange}
-              />
+              <div className="grid gap-2">
+                <div className="grid gap-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input
+                    name="email"
+                    id="email"
+                    type="email"
+                    placeholder="m@example.com"
+                    required
+                    onChange={handleChange}
+                  />
+                </div>
+                <Label htmlFor="phone">Phone</Label>
+                <Input
+                  name="phone"
+                  id="phone"
+                  type="number"
+                  placeholder="966501234567"
+                  required
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  name="password"
+                  id="password"
+                  type="password"
+                  required
+                  onChange={handleChange}
+                />
+              </div>
+              <Button type="submit" className="w-full">
+                Create an account
+              </Button>
             </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                name="password"
-                id="password"
-                type="password"
-                required
-                onChange={handleChange}
-              />
+            <div className="mt-4 text-center text-sm">
+              Already have an account?{" "}
+              <Link to="/login" className="underline">
+                Sign in
+              </Link>
             </div>
-            <Button type="submit" className="w-full">
-              Create an account
-            </Button>
-          </div>
-          <div className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link to="/login" className="underline">
-              Sign in
-            </Link>
-          </div>
-        </CardContent>
-      </Card>
-    </form>
+          </CardContent>
+        </Card>
+      </form>
+    </div>
   )
 }

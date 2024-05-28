@@ -132,7 +132,14 @@ export default function ProductDetail() {
             </AccordionItem>
           </Accordion>
           <div className="flex gap-4">
-            <Button size="lg" onClick={() => handleAddCart(product)}>
+            <Button
+              size="lg"
+              onClick={() => {
+                Array.from(Array(quantity).keys()).map((item) => {
+                  handleAddCart(product)
+                })
+              }}
+            >
               Add to Cart
             </Button>
             <Button size="lg" variant="outline">

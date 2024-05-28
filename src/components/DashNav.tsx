@@ -16,7 +16,7 @@ export default function DashNav() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                to="/overview"
+                to="/"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Home className="h-5 w-5" />
@@ -32,7 +32,7 @@ export default function DashNav() {
             <TooltipTrigger asChild>
               <Link
                 to="/order"
-                className="flex h-9 w-9 items-center justify-center rounded-lg text-accent-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
+                className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <ShoppingCart className="h-5 w-5" />
                 <span className="sr-only">Orders</span>
@@ -50,10 +50,10 @@ export default function DashNav() {
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Warehouse className="h-5 w-5" />
-                <span className="sr-only">Inventory</span>
+                <span className="sr-only">Inventories</span>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right">Inventory</TooltipContent>
+            <TooltipContent side="right">Inventories</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 
@@ -61,7 +61,7 @@ export default function DashNav() {
           <Tooltip>
             <TooltipTrigger asChild>
               <Link
-                to="/"
+                to="/product"
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Package className="h-5 w-5" />
@@ -80,10 +80,10 @@ export default function DashNav() {
                 className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:text-foreground md:h-8 md:w-8"
               >
                 <Type className="h-5 w-5" />
-                <span className="sr-only">Category</span>
+                <span className="sr-only">Categories</span>
               </Link>
             </TooltipTrigger>
-            <TooltipContent side="right">Category</TooltipContent>
+            <TooltipContent side="right">Categories</TooltipContent>
           </Tooltip>
         </TooltipProvider>
 

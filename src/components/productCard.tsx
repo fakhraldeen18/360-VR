@@ -2,7 +2,7 @@ import { GlobalContext } from "@/App"
 import api from "@/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Product } from "@/types/Index"
+import { TypeProductInvent } from "@/types/Index"
 import { CardBody, Typography } from "@material-tailwind/react"
 import { useQuery } from "@tanstack/react-query"
 import { useContext } from "react"
@@ -25,13 +25,13 @@ export function ProductCards() {
   }
 
   // Queries
-  const { data: products, error } = useQuery<Product[]>({
+  const { data: products, error } = useQuery<TypeProductInvent[]>({
     queryKey: ["product"],
     queryFn: getProducts
   })
   return (
     <>
-      <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
+      <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-20">
         {products?.map((product) => (
           <Card
             key={product.inventoryId}
@@ -60,10 +60,13 @@ export function ProductCards() {
               </div>
             </CardBody>
             <CardFooter className=" justify-between">
-              <Button className="bg-background  outline  hover:bg-slate-600 outline-1">
+              <Button className="  bg-slate-600 outline hover:bg-slate-600 text-white outline-1">
                 <Link to={`/products/${product.inventoryId}`}>Details</Link>
               </Button>
-              <Button className=" bg-[#701878]" onClick={() => handleAddCart(product)}>
+              <Button
+                className=" bg-[#701878] text-white hover:text-gray-900"
+                onClick={() => handleAddCart(product)}
+              >
                 Add to cart
               </Button>
             </CardFooter>

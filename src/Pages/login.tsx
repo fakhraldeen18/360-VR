@@ -54,8 +54,10 @@ export function Login() {
     })
   }
   return (
-    <form onSubmit={handleSubmit}>
-      <Card className="mx-auto max-w-sm mt-20">
+    <div className=" flex flex-col justify-between">
+      <></>
+         <form  onSubmit={handleSubmit}>
+      <Card className="mx-auto max-w-sm lg:mt-72">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>Enter your email below to login to your account</CardDescription>
@@ -96,6 +98,8 @@ export function Login() {
           </div>
         </CardContent>
       </Card>
-    </form>
+    </form> 
+    </div>
+
   )
 }

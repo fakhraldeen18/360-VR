@@ -1,14 +1,6 @@
 import {
-  Home,
-  LineChart,
   MoreHorizontal,
-  Package,
-  PanelLeft,
   PlusCircle,
-  Search,
-  ShoppingCart,
-  UserIcon,
-  Users2
 } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
@@ -25,11 +17,8 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import {
   Table,
   TableBody,
@@ -39,15 +28,13 @@ import {
   TableRow
 } from "@/components/ui/table"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Typography } from "@material-tailwind/react"
-import { Link } from "react-router-dom"
-import logoImage from "../assets/Images/logo.png"
 import api from "@/api"
 import { useQuery } from "@tanstack/react-query"
 import { TypeInventory, TypeProduct } from "@/types/Index"
 import AddInventory from "@/components/AddInventory"
 import { DeleteInventory } from "@/components/DeleteInventory"
 import { EditInventory } from "@/components/EditInventory"
+import Header from "@/components/Header"
 
 export function Inventory() {
   const getProducts = async () => {
@@ -82,7 +69,7 @@ export function Inventory() {
     queryFn: getInventories
   })
 
-  const productWithCategories = inventories?.map((inventory) => {
+  const productWithInventories = inventories?.map((inventory) => {
     const product = products?.find((c) => c.id === inventory.productId)
     if (product)
       return {
@@ -95,89 +82,7 @@ export function Inventory() {
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button size="icon" variant="outline" className="sm:hidden">
-                <PanelLeft className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="sm:max-w-xs">
-              <nav className="grid gap-6 text-lg font-medium">
-                <Typography className="group flex h-10 w-10 shrink-0 items-center justify-center gap-2 rounded-full text-lg font-semibold text-primary-foreground md:text-base">
-                  <img src={logoImage} alt="logo" className="w-8 h-8 rounded-full " />
-                </Typography>
-                <Link
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Home className="h-5 w-5" />
-                  Dashboard
-                </Link>
-                <Link
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <ShoppingCart className="h-5 w-5" />
-                  Orders
-                </Link>
-                <Link to="#" className="flex items-center gap-4 px-2.5 text-foreground">
-                  <Package className="h-5 w-5" />
-                  Products
-                </Link>
-                <Link
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <Users2 className="h-5 w-5" />
-                  Customers
-                </Link>
-                <Link
-                  to="#"
-                  className="flex items-center gap-4 px-2.5 text-muted-foreground hover:text-foreground"
-                >
-                  <LineChart className="h-5 w-5" />
-                  Settings
-                </Link>
-              </nav>
-            </SheetContent>
-          </Sheet>
-          <div className="relative ml-auto flex-1 md:grow-0">
-            <form className="flex gap-4">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search..."
-                className="w-full rounded-lg bg-background pl-8 md:w-[200px] lg:w-[320px]"
-              />
-              <Button
-                variant="outline"
-                type="submit"
-                size="sm"
-                className="h-10 -ml-2 text-center gap-1"
-              >
-                <span className="">Search</span>
-              </Button>
-            </form>
-          </div>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
-                <UserIcon className="h-6 w-6" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Settings</DropdownMenuItem>
-              <DropdownMenuItem>Support</DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>Logout</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </header>
+        <Header/>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Tabs defaultValue="all">
             <div className="flex items-center">
@@ -192,7 +97,7 @@ export function Inventory() {
               <div className="ml-auto flex items-center gap-2">
                 <Button size="sm" className="h-7 gap-1">
                   <PlusCircle className="h-3.5 w-3.5" />
-                  <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+                  <span>
                     <AddInventory />
                   </span>
                 </Button>
@@ -220,7 +125,7 @@ export function Inventory() {
                         </TableHead>
                       </TableRow>
                     </TableHeader>
-                    {productWithCategories?.map((invent) => {
+                    {productWithInventories?.map((invent) => {
                       return (
                         <TableBody key={invent.id} className="text-left">
                           <TableRow>

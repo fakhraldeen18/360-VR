@@ -1,4 +1,4 @@
-export type Product = {
+export type TypeProductInvent = {
   id: string
   inventoryId: string
   name: string
@@ -51,4 +51,18 @@ export type TypeInventory = {
   quantity: number
   color: string
   size: string
+}
+export type TypeOrderItem = {
+  id: string
+  inventoryId: string
+  orderId: string
+  quantity: number
+  totalPrice: number
+}
+export type TypeOrder = {
+  id: string
+  userId: string
+  date: string
+  status: string
+  orderItem: TypeOrderItem[]
 }

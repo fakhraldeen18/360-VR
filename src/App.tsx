@@ -7,21 +7,24 @@ import ProductDetail from "./components/ProductDetail"
 
 import "./App.css"
 import { createContext, useEffect, useState } from "react"
-import { DecodedUser, Product, ROLE } from "./types/Index"
-import { Dashboard } from "./components/Dashboard"
+import { DecodedUser, TypeProductInvent, ROLE } from "./types/Index"
+import { Product } from "./Pages/Product"
 import { Login } from "./Pages/Login"
 import { SignUp } from "./Pages/SignUp"
 import PrivateRoute from "./context/PrivateRoute"
-import { Overview } from "./Pages/Overview"
+import { Dashboard } from "./Pages/Dashboard"
 import DashNav from "./components/DashNav"
 import { Order } from "./Pages/Order"
 import { Customer } from "./Pages/User"
 import { Category } from "./Pages/Category"
 import { Inventory } from "./Pages/Inventory"
+import { CustomerProfile } from "./Pages/CustomerProfile"
+import { Checkout } from "./Pages/Checkout"
+import { ContactUs } from "./components/ContactUs"
 
 export type GlobalContextType = {
   state: GlobalState
-  handleAddCart: (product: Product) => void
+  handleAddCart: (product: TypeProductInvent) => void
   handelDeleteItemFromCart: (inventoryId: string) => void
   handleDeleteOneFromCart: (inventoryId: string) => void
   handleRemoveCart: () => void
@@ -29,7 +32,7 @@ export type GlobalContextType = {
   handleRemoveUser: () => void
 }
 export type GlobalState = {
-  cart: Product[]
+  cart: TypeProductInvent[]
   user: DecodedUser | null
 }
 export const GlobalContext = createContext<GlobalContextType | null>(null)
@@ -44,6 +47,7 @@ function App() {
     const decodedUserToken = localStorage.getItem("decodedUserToken")
     if (decodedUserToken) {
       const decodedUser = JSON.parse(decodedUserToken)
+      console.log("decodedUser:", decodedUser)
       setState({
         ...state,
         user: decodedUser
@@ -51,14 +55,17 @@ function App() {
     }
   }, [])
 
-  const handleAddCart = (product: Product) => {
-    // const isDuplicated = state.cart.find((item) => item.inventoryId === product.inventoryId)
-    // if (isDuplicated) return
-
-    setState({
-      ...state,
-      cart: [...state.cart, product]
+  const handleAddCart = (product: TypeProductInvent) => {
+    setState((prevState) => {
+      return {
+        ...prevState,
+        cart: [...prevState.cart, product]
+      }
     })
+    // setState({
+    //   ...state,
+    //   cart: [...state.cart, product]
+    // })
   }
 
   const handelDeleteItemFromCart = (inventoryId: string) => {
@@ -126,7 +133,51 @@ function App() {
                   </PrivateRoute>
                 }
               />
+              <Route
+                path="/Product"
+                element={
+                  <PrivateRoute>
+                    <Product />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/order"
+                element={
+                  <PrivateRoute>
+                    <Order />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/customer"
+                element={
+                  <PrivateRoute>
+                    <Customer />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/category"
+                element={
+                  <PrivateRoute>
+                    <Category />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/inventory"
+                element={
+                  <PrivateRoute>
+                    <Inventory />
+                  </PrivateRoute>
+                }
+              />
+
               <Route path="/signUp" element={<SignUp />} />
+              <Route path="/customerProfile" element={<CustomerProfile />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/contactUs" element={<ContactUs />} />
               <Route path="/products/:productID" element={<ProductDetail />} />
             </Routes>
             <Footer />
@@ -136,8 +187,7 @@ function App() {
             <DashNav />
             <Routes>
               <Route path="/" element={<Dashboard />} />
-          <Route path="/home" element={<Home />} />
-              <Route path="/overview" element={<Overview />} />
+              <Route path="/Product" element={<Product />} />
               <Route path="/order" element={<Order />} />
               <Route path="/customer" element={<Customer />} />
               <Route path="/category" element={<Category />} />

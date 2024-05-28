@@ -7,8 +7,7 @@ import { GlobalContext } from "@/App"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
 import { Button } from "./ui/button"
 import logoImage from "../assets/Images/logo.png"
-import api from "@/api"
-import { Product } from "@/types/Index"
+import { TypeProductInvent } from "@/types/Index"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,48 +26,30 @@ type OrderItems = {
 type CheckoutOrder = OrderItems[]
 export function Nav() {
   const [openNav, setOpenNav] = React.useState(false)
+  const [openCart, setOpenCart] = React.useState(false)
   React.useEffect(() => {
     window.addEventListener("resize", () => window.innerWidth >= 960 && setOpenNav(false))
   }, [])
 
   const context = useContext(GlobalContext)
-  if (!context) throw Error("COntext is missing")
+  if (!context) throw Error("Context is missing")
   const {
     state,
     handelDeleteItemFromCart,
     handleRemoveUser,
     handleAddCart,
-    handleDeleteOneFromCart,
-    handleRemoveCart
+    handleDeleteOneFromCart
   } = context
 
   const groups = state.cart.reduce((acc, obj) => {
     const key = obj.id
     const curGroup = acc[key] ?? []
     return { ...acc, [key]: [...curGroup, obj] }
-  }, {} as { [key: string]: Product[] })
+  }, {} as { [key: string]: TypeProductInvent[] })
   const keys = Object.keys(groups)
   const total = state.cart.reduce((acc, curr) => {
     return acc + curr.price
   }, 0)
-
-  const token = localStorage.getItem("token")
-  const handleCheckout = async () => {
-    try {
-      const res = await api.post("/order", checkoutOrder, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      })
-      if (res.status === 201) {
-        handleRemoveCart()
-      }
-      return res.data
-    } catch (error) {
-      console.error(error)
-      return Promise.reject(new Error("Something went wrong"))
-    }
-  }
 
   const handleLogOut = () => {
     localStorage.removeItem("token")
@@ -82,7 +63,7 @@ export function Nav() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="flex items-center gap-x-2 p-1 font-medium"
+        className="flex items-center gap-x-2 p-1 font-medium "
       >
         <Link to="/products" className="flex items-center">
           Product
@@ -104,7 +85,7 @@ export function Nav() {
         color="blue-gray"
         className="flex items-center gap-x-2 p-1 font-medium"
       >
-        <Link to="#" className="flex items-center">
+        <Link to="/contactUs" className="flex items-center">
           Contact Us
         </Link>
       </Typography>
@@ -132,27 +113,28 @@ export function Nav() {
     })
   })
   return (
-    <Navbar className="mx-auto max-w-screen-xl px-4 py-2 lg:px-8 lg:py-4 rounded-lg bg-background ">
-      <div className="container mx-auto flex items-center justify-between text-blue-gray-900">
+    <Navbar className="mx-auto max-w-screen-x2 px-4 py-2 lg:px-8 lg:py-4 border-0 shadow-none absolute top-0 z-10 flex-row justify-between mt-3 mb-28">
+      <div className="container mx-auto flex items-center justify-between ">
         <Link to="/">
           <img src={logoImage} alt="logo" className="w-12 h-12 rounded-full " />
         </Link>
         <div className="hidden lg:block">{navList}</div>
-        <div className="flex items-center gap-x-1">
+        <div className="flex items-center gap-x-1 justify-end">
           <section className="hidden lg:inline-block">
-            <Popover>
+            <Popover open={openCart} onOpenChange={setOpenCart}>
               <PopoverTrigger asChild className="  items-center ">
-                <Link
-                  className="relative p-2 hover:bg-slate-900 dark:hover:bg-gray-800 rounded-full"
-                  to="#"
-                >
-                  <ShoppingCartIcon className="h-6 w-6" />
-                  {keys.length == 0 ? null : (
-                    <span className="absolute -top-2 -right-2 rounded-full bg-pink-500 opacity-75 text-white text-xs px-2 py-1">
+                {keys.length == 0 ? (
+                  <Link className="pt-1 rounded-full hidden lg:inline-block" to="#">
+                    <ShoppingCartIcon className="h-6 w-6" />
+                  </Link>
+                ) : (
+                  <Link className="pt-5 rounded-full hidden lg:inline-block" to="#">
+                    <ShoppingCartIcon className="h-6 w-6" />
+                    <span className="relative -top-10 -right-2 rounded-full bg-pink-500 opacity-75 text-white text-xs px-2 py-1">
                       {keys.length}
                     </span>
-                  )}
-                </Link>
+                  </Link>
+                )}
               </PopoverTrigger>
               <PopoverContent align="end" className="w-90 p-4">
                 {state.cart.length === 0 ? (
@@ -161,9 +143,6 @@ export function Nav() {
                   <div className="flex flex-col gap-4">
                     <div className="flex items-center justify-between">
                       <h3 className="text-lg font-medium">Your Cart</h3>
-                      <Link className="text-sm font-medium hover:underline" to="#">
-                        View Cart
-                      </Link>
                     </div>
                     {keys.map((key) => {
                       const products = groups[key]
@@ -222,8 +201,8 @@ export function Nav() {
                       <p className="text-sm font-medium">Total</p>
                       <p className="text-sm font-medium">SR {total}</p>
                     </div>
-                    <Button className="w-full" onClick={handleCheckout}>
-                      Checkout
+                    <Button className="w-full" onClick={() => setOpenCart(false)}>
+                      <Link to="/checkout">Checkout</Link>
                     </Button>
                   </div>
                 )}
@@ -238,9 +217,13 @@ export function Nav() {
               </Typography>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account: {state.user?.name}</DropdownMenuLabel>
+              {!state.user ? (
+                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              ) : (
+                <DropdownMenuLabel>{state.user?.name}</DropdownMenuLabel>
+              )}
               <DropdownMenuSeparator />
-              <Link to="/dashboard">
+              <Link to="/customerProfile">
                 <DropdownMenuItem>profile</DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
