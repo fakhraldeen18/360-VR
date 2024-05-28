@@ -62,10 +62,6 @@ function App() {
         cart: [...prevState.cart, product]
       }
     })
-    // setState({
-    //   ...state,
-    //   cart: [...state.cart, product]
-    // })
   }
 
   const handelDeleteItemFromCart = (inventoryId: string) => {
