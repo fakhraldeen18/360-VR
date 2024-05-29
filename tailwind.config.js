@@ -72,7 +72,7 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out"
       },
       backgroundImage: {
-        "hero-pattern": "url('./src/assets/Images/herobaneer.jpg')",
+        "hero-pattern": "url('https://s4.aconvert.com/convert/p3r68-cdx67/ao2dn-q60bg.jpg')",
         "footer-texture": "url('https://s4.aconvert.com/convert/p3r68-cdx67/akuyu-urzxd.jpg')"
       }
     }
