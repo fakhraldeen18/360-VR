@@ -44,7 +44,9 @@ export function DeleteInventory({ inventory }: { inventory: TypeInventory }) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => handleDeleteInventory(inventory.id)}>Delete item</Button>
+          <Button variant="destructive" onClick={() => handleDeleteInventory(inventory.id)}>
+            Delete item
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

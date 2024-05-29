@@ -79,8 +79,9 @@ export function Checkout() {
     }
   }
   return (
-    <>
-      <div className="grid md:grid-cols-[1fr_300px] gap-8 p-6 md:p-10 text-left">
+    <div className="flex flex-col justify-between">
+      <></>
+      <div className="grid md:grid-cols-[1fr_300px] gap-8 p-6 md:p-10 text-left mt-16 lg:mt-20">
         <div>
           <h1 className="text-2xl font-bold mb-4">Checkout</h1>
           <Card>
@@ -311,6 +312,6 @@ export function Checkout() {
           </Card>
         </div>
       </div>
-    </>
+    </div>
   )
 }

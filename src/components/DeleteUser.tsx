@@ -44,7 +44,9 @@ export function DeleteUser({ user }: { user: User }) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => handleDeleteUser(user.id)}>Delete item</Button>
+          <Button variant="destructive" onClick={() => handleDeleteUser(user.id)}>
+            Delete item
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

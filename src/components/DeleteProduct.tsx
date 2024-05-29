@@ -42,7 +42,9 @@ export function DeleteProduct({
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={() => handleDeleteProduct(product.id)}>Delete item</Button>
+          <Button variant="destructive" onClick={() => handleDeleteProduct(product.id)}>
+            Delete item
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

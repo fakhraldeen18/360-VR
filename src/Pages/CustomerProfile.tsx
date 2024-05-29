@@ -77,7 +77,9 @@ export function CustomerProfile() {
   })
 
   return (
-    <div className="flex flex-col md:grid md:grid-cols-[280px_1fr] gap-6 p-4 md:p-6">
+    <div className="flex flex-col justify-between">
+      <></>
+    <div className="flex flex-col md:grid md:grid-cols-[280px_1fr] gap-6 p-4 md:p-6 mt-20 lg:mt-40">
       <div className=" dark:bg-gray-800 rounded-lg p-6 border">
         {findCustomer?.map((customer) => {
           return (
@@ -171,6 +173,7 @@ export function CustomerProfile() {
           )
         })}
       </div>
+    </div>
     </div>
   )
 }

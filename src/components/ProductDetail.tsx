@@ -1,5 +1,5 @@
 import api from "@/api"
-import { Product } from "@/types/Index"
+import { TypeProductInvent } from "@/types/Index"
 import { useQuery } from "@tanstack/react-query"
 import { useParams } from "react-router-dom"
 import { Input } from "./ui/input"
@@ -33,7 +33,7 @@ export default function ProductDetail() {
   }
 
   // Queries
-  const { data: products, error } = useQuery<Product[]>({
+  const { data: products, error } = useQuery<TypeProductInvent[]>({
     queryKey: ["product"],
     queryFn: getProducts
   })
@@ -52,8 +52,10 @@ export default function ProductDetail() {
   }
 
   return (
-    <div>
-      <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 mt-8">
+    <div className="flex flex-col justify-between">
+      <>
+      </>
+      <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 mt-60">
         <div className="grid grid-cols-1 gap-4">
           <img
             alt="Product Image"
@@ -141,9 +143,6 @@ export default function ProductDetail() {
               }}
             >
               Add to Cart
-            </Button>
-            <Button size="lg" variant="outline">
-              Buy Now
             </Button>
           </div>
         </div>

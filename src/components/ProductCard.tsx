@@ -4,19 +4,37 @@ import { Button } from "@/components/ui/button"
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { TypeProductInvent } from "@/types/Index"
 import { CardBody, Typography } from "@material-tailwind/react"
-import { useQuery } from "@tanstack/react-query"
-import { useContext } from "react"
-import { Link } from "react-router-dom"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { ChangeEvent, FormEvent, useContext, useState } from "react"
+import { Link, useSearchParams } from "react-router-dom"
+import SearchBy from "./SearchBy"
+import { Input } from "./ui/input"
 
 export function ProductCards() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("COntext is missing")
   const { handleAddCart, state } = context
-  console.log("state:", state)
+  const queryClient = useQueryClient()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const defaultSearch = searchParams.get("searchBy") || ""
+  const [searchBy, setSearchBy] = useState(defaultSearch)
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target
+    setSearchBy(value)
+  }
+  const handleSearch = (e: FormEvent) => {
+    e.preventDefault()
+    queryClient.invalidateQueries({ queryKey: ["product"] })
+    setSearchParams({
+      ...searchParams,
+      searchBy: searchBy
+    })
+  }
 
   const getProducts = async () => {
     try {
-      const res = await api.get("/product")
+      const res = await api.get(`/product?search=${searchBy}`)
       return res.data
     } catch (error) {
       console.error(error)
@@ -31,6 +49,20 @@ export function ProductCards() {
   })
   return (
     <>
+      <div className="relative w-full md:justify-center mx-auto mt-10 md:mt-20">
+        <form className="flex justify-center gap-4" onSubmit={handleSearch}>
+          <Input
+            name="searchBy"
+            type="search"
+            placeholder="Search..."
+            className="w-1/2 md:w-1/2 bg-background pl-8"
+            onChange={handleChange}
+          />
+          <Button type="submit" size="sm" className="h-10 -ml-2 text-center gap-1">
+            <span className="">Search</span>
+          </Button>
+        </form>
+      </div>
       <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-20">
         {products?.map((product) => (
           <Card
@@ -63,12 +95,7 @@ export function ProductCards() {
               <Button className="  bg-slate-600 outline hover:bg-slate-600 text-white outline-1">
                 <Link to={`/products/${product.inventoryId}`}>Details</Link>
               </Button>
-              <Button
-                className=" bg-[#701878] text-white hover:text-gray-900"
-                onClick={() => handleAddCart(product)}
-              >
-                Add to cart
-              </Button>
+              <Button onClick={() => handleAddCart(product)}>Add to cart</Button>
             </CardFooter>
           </Card>
         ))}

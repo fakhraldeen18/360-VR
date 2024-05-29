@@ -44,7 +44,9 @@ export function DeleteCategory({ category }: { category: TypeCategory }) {
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button onClick={() => handleDeleteCategory(category.id)}>Delete item</Button>
+          <Button variant="destructive" onClick={() => handleDeleteCategory(category.id)}>
+            Delete item
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

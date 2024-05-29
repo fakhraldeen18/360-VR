@@ -63,7 +63,7 @@ export function Nav() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="flex items-center gap-x-2 p-1 font-medium "
+        className="flex items-center gap-x-2 p-1 font-medium opacity-80 transition-opacity hover:opacity-100"
       >
         <Link to="/products" className="flex items-center">
           Product
@@ -73,17 +73,7 @@ export function Nav() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="flex items-center gap-x-2 p-1 font-medium"
-      >
-        <Link to="/dashboard" className="flex items-center">
-          Profile
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="flex items-center gap-x-2 p-1 font-medium"
+        className="flex items-center gap-x-2 p-1 font-medium opacity-80 transition-opacity hover:opacity-100"
       >
         <Link to="/contactUs" className="flex items-center">
           Contact Us
@@ -93,7 +83,7 @@ export function Nav() {
         as="li"
         variant="small"
         color="blue-gray"
-        className="flex items-center gap-x-2 p-1 font-medium"
+        className="flex items-center gap-x-2 p-1 font-medium opacity-80 transition-opacity hover:opacity-100"
       >
         <Link to="#" className="flex items-center">
           About
@@ -130,7 +120,7 @@ export function Nav() {
                 ) : (
                   <Link className="pt-5 rounded-full hidden lg:inline-block" to="#">
                     <ShoppingCartIcon className="h-6 w-6" />
-                    <span className="relative -top-10 -right-2 rounded-full bg-pink-500 opacity-75 text-white text-xs px-2 py-1">
+                    <span className="relative -top-10 -right-2 rounded-full bg-[#6d28d9e6] opacity-75 text-white text-xs px-2 py-1">
                       {keys.length}
                     </span>
                   </Link>

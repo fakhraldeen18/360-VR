@@ -72,9 +72,8 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out"
       },
       backgroundImage: {
-        "hero-pattern":
-          "url('https://cdn.mos.cms.futurecdn.net/Bdd9TqytLkJoqePAYNzxgc-1200-80.jpg')",
-        "footer-texture": "url('https://via.placeholder.com/600x200.png')"
+        "hero-pattern": "url('./src/assets/Images/herobaneer.jpg')",
+        "footer-texture": "url('https://s4.aconvert.com/convert/p3r68-cdx67/akuyu-urzxd.jpg')"
       }
     }
   },

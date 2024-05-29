@@ -36,6 +36,7 @@ export function EditProduct({ product }: { product: TypeProduct }) {
       return Promise.reject(new Error("Something went wrong"))
     }
   }
+  
   const getCategories = async () => {
     try {
       const res = await api.get("/category")
@@ -74,7 +75,7 @@ export function EditProduct({ product }: { product: TypeProduct }) {
   const handleUpdate = async () => {
     console.log(updatedProduct)
     await updateProduct()
-    queryClient.invalidateQueries({ queryKey: ["product"] })
+    queryClient.invalidateQueries({ queryKey: ["productNoneJoin"] })
   }
 
   return (
