@@ -7,17 +7,25 @@ import { CardBody, Typography } from "@material-tailwind/react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { ChangeEvent, FormEvent, useContext, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
-import SearchBy from "./SearchBy"
 import { Input } from "./ui/input"
 
 export function ProductCards() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("COntext is missing")
-  const { handleAddCart, state } = context
+  const { handleAddCart } = context
   const queryClient = useQueryClient()
   const [searchParams, setSearchParams] = useSearchParams()
   const defaultSearch = searchParams.get("searchBy") || ""
   const [searchBy, setSearchBy] = useState(defaultSearch)
+  const scrollToTop = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: "smooth"
+      })
+    }
+  }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target
@@ -47,6 +55,7 @@ export function ProductCards() {
     queryKey: ["product"],
     queryFn: getProducts
   })
+
   return (
     <>
       <div className="relative w-full md:justify-center mx-auto mt-10 md:mt-20">
@@ -63,6 +72,7 @@ export function ProductCards() {
           </Button>
         </form>
       </div>
+
       <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-20">
         {products?.map((product) => (
           <Card
@@ -93,9 +103,13 @@ export function ProductCards() {
             </CardBody>
             <CardFooter className=" justify-between">
               <Button className="  bg-slate-600 outline hover:bg-slate-600 text-white outline-1">
-                <Link to={`/products/${product.inventoryId}`}>Details</Link>
+                <Link onClick={scrollToTop} to={`/products/${product.inventoryId}`}>
+                  Details
+                </Link>
               </Button>
-              <Button onClick={() => handleAddCart(product)}>Add to cart</Button>
+              <Button disabled={product.quantity===0} onClick={() => handleAddCart(product)}>
+                {product.quantity > 0 ? "Add to cart" : "Out of stock"}
+              </Button>
             </CardFooter>
           </Card>
         ))}

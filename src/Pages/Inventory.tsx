@@ -42,7 +42,6 @@ export function Inventory() {
       const res = await api.get(`/product/search`)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -58,7 +57,6 @@ export function Inventory() {
       const res = await api.get("/inventory")
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

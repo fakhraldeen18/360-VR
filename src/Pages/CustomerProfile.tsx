@@ -44,7 +44,6 @@ export function CustomerProfile() {
     queryFn: getUsers
   })
   const findCustomer = users?.filter((user) => user.id == state.user?.nameidentifier)
-  console.log("findCustomer:", findCustomer)
   const getOrders = async () => {
     try {
       const res = await api.get("/order")

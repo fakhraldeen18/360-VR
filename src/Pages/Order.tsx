@@ -78,19 +78,9 @@ export function Order() {
     queryFn: getOrderItems
   })
 
-  const ordersUsers = orders?.map((order) => {
-    const user = users?.find((user) => user.id === order.userId)
-    if (user)
-      return {
-        ...order,
-        userId: user.name
-      }
-    return order
-  })
-
   const fromThisWeek = orderItems?.reduce((acc, curr) => {
     return acc + curr.totalPrice
-  }, 0)
+  }, 0) || 0
 
   function groupOrdersByDate(orders:TypeOrder[]) {
     const now = new Date()
@@ -121,7 +111,7 @@ export function Order() {
 
     return groupedOrders
   }
-  const ordersByView = groupOrdersByDate(orders)
+  const ordersByView = groupOrdersByDate(orders || [])
   return (
     <div className="flex min-h-screen w-full flex-col bg-muted/40">
       <div className="flex flex-col sm:gap-4 sm:py-4 sm:pl-14">
@@ -181,6 +171,7 @@ export function Order() {
                           </TableRow>
                         </TableHeader>
                         {ordersByView[orderView]?.map((order) => {
+                          const user = users?.find((userName) => userName.id == order.userId)
                           const totalItems = orderItems?.filter(
                             (findOrder) => findOrder.orderId == order.id
                           )
@@ -191,7 +182,7 @@ export function Order() {
                             <TableBody key={order.id} className="text-left">
                               <TableRow className="bg-accent">
                                 <TableCell>
-                                  <div className="font-medium">{order.userId}</div>
+                                  <div className="font-medium">{user?.name}</div>
                                 </TableCell>
                                 <TableCell className="hidden sm:table-cell">
                                   <Badge className="text-xs" variant="secondary">

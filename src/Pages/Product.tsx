@@ -37,24 +37,12 @@ import Header from "../components/Header"
 export function Product() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("Context is missing")
-  const { handleRemoveUser, state } = context
+  const { handleRemoveUser } = context
 
   const [searchParams, setSearchParams] = useSearchParams()
   const defaultSearch = searchParams.get("searchBy") || ""
   const [searchBy, setSearchBy] = useState(defaultSearch)
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target
-    setSearchBy(value)
-  }
-  const handleSearch = (e: FormEvent) => {
-    e.preventDefault()
-    queryClient.invalidateQueries({ queryKey: ["productNoneJoin"] })
-    setSearchParams({
-      ...searchParams,
-      searchBy: searchBy
-    })
-  }
   const queryClient = useQueryClient()
 
   const getProducts = async () => {
@@ -62,7 +50,6 @@ export function Product() {
       const res = await api.get(`/product/search?searchBy=${searchBy}`)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -71,7 +58,6 @@ export function Product() {
       const res = await api.get("/category")
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -80,7 +66,6 @@ export function Product() {
       const res = await api.delete(`/product/${id}`)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

@@ -21,7 +21,6 @@ import {
   DropdownMenuTrigger
 } from "./ui/dropdown-menu"
 import logoImage from "../assets/Images/logo.png"
-import SearchBy from "./SearchBy"
 import { useContext } from "react"
 import { GlobalContext } from "@/App"
 

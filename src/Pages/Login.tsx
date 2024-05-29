@@ -12,9 +12,7 @@ import { Link, useNavigate } from "react-router-dom"
 export function Login() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("COntext is missing")
-  const { handleStoreUser, state } = context
-
-  console.log("state:", state.user)
+  const { handleStoreUser } = context
 
   const navigate = useNavigate()
   const [login, setLogin] = useState({
@@ -27,7 +25,6 @@ export function Login() {
       const res = await api.post("/user/login", login)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

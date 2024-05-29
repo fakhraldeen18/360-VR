@@ -23,7 +23,6 @@ export function EditInventory({ inventory }: { inventory: TypeInventory }) {
       const res = await api.patch(`/inventory/${inventory.id}`, updatedInventory)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -37,7 +36,6 @@ export function EditInventory({ inventory }: { inventory: TypeInventory }) {
   }
 
   const handleUpdate = async () => {
-    console.log(updatedInventory)
     await updateInventory()
     queryClient.invalidateQueries({ queryKey: ["inventory"] })
   }

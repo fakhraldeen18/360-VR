@@ -20,7 +20,6 @@ export function DeleteUser({ user }: { user: User }) {
       const res = await api.delete(`/user/${id}`)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

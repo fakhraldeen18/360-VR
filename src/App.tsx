@@ -21,6 +21,7 @@ import { Inventory } from "./Pages/Inventory"
 import { CustomerProfile } from "./Pages/CustomerProfile"
 import { Checkout } from "./Pages/Checkout"
 import { ContactUs } from "./components/ContactUs"
+import ProductCate from "./components/ProductCate"
 
 export type GlobalContextType = {
   state: GlobalState
@@ -47,7 +48,6 @@ function App() {
     const decodedUserToken = localStorage.getItem("decodedUserToken")
     if (decodedUserToken) {
       const decodedUser = JSON.parse(decodedUserToken)
-      console.log("decodedUser:", decodedUser)
       setState({
         ...state,
         user: decodedUser
@@ -88,7 +88,6 @@ function App() {
   }
 
   const handleStoreUser = (user: DecodedUser) => {
-    console.log("user:", user)
     setState({
       ...state,
       user: user
@@ -100,7 +99,6 @@ function App() {
       user: null
     })
   }
-  console.log("state:", state)
   return (
     <div className="App">
       <GlobalContext.Provider
@@ -174,6 +172,7 @@ function App() {
               <Route path="/customerProfile" element={<CustomerProfile />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/contactUs" element={<ContactUs />} />
+              <Route path="/productCate" element={<ProductCate />} />
               <Route path="/products/:productID" element={<ProductDetail />} />
             </Routes>
             <Footer />

@@ -24,7 +24,6 @@ export default function AddInventory() {
       const res = await api.post("/inventory", inventory)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -33,7 +32,6 @@ export default function AddInventory() {
       const res = await api.get(`/product/search`)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -54,7 +52,6 @@ export default function AddInventory() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    console.log("inventory:", inventory)
     await postInventory()
     queryClient.invalidateQueries({ queryKey: ["inventory"] })
   }

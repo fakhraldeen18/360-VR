@@ -225,7 +225,7 @@ export function Checkout() {
             </CardContent>
           </Card>
           <div className="flex justify-start mt-4">
-            <Button size="lg" onClick={handleCheckout}>
+            <Button size="lg" onClick={handleCheckout} disabled={state.cart.length === 0}>
               Place Order
             </Button>
           </div>

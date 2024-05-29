@@ -23,7 +23,6 @@ export function EditCategory({ category }: { category: TypeCategory }) {
       const res = await api.patch(`/category/${category.id}`, updatedCategory)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

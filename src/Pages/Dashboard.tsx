@@ -78,7 +78,6 @@ export function Dashboard() {
       }
     return order
   })
-  console.log("OrderItems:", OrderItems)
   const ordersUsers = orders?.map((order) => {
     const user = users?.find((user) => user.id === order.userId)
     if (user)

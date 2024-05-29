@@ -37,7 +37,6 @@ export function EditProfile({ user }: { user: User }) {
   }
   const handleUpdate = async (e:FormEvent) => {
     e.preventDefault()
-    console.log(updatedCustomer)
     await updateInventory()
     queryClient.invalidateQueries({ queryKey: ["user"] })
   }

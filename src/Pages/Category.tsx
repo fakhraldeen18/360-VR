@@ -63,7 +63,6 @@ export function Category() {
     await postCategory()
     queryClient.invalidateQueries({ queryKey: ["category"] })
 
-    console.log("newCategory:", newCategory)
   }
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {

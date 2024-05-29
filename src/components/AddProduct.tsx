@@ -24,7 +24,6 @@ export default function AddProduct() {
       const res = await api.post("/product", product)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -34,7 +33,6 @@ export default function AddProduct() {
       const res = await api.get("/category")
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -53,7 +51,6 @@ export default function AddProduct() {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
-    console.log("product:", product)
     await postProduct()
 
     queryClient.invalidateQueries({ queryKey: ["productNoneJoin"] })

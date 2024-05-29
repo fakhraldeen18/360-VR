@@ -20,7 +20,6 @@ export function DeleteInventory({ inventory }: { inventory: TypeInventory }) {
       const res = await api.delete(`/inventory/${id}`)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

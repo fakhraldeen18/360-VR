@@ -26,7 +26,6 @@ export function SignUp() {
       const res = await api.post("/user/signup", user)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

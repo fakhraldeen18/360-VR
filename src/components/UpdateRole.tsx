@@ -8,9 +8,8 @@ import {
   DialogTitle,
   DialogTrigger
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ROLE, User } from "@/types/Index"
+import {  User } from "@/types/Index"
 import {
   Select,
   SelectContent,
@@ -21,10 +20,9 @@ import {
   SelectValue
 } from "./ui/select"
 import api from "@/api"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
-import { ChangeEvent, useState } from "react"
+import {  useQueryClient } from "@tanstack/react-query"
+import {  useState } from "react"
 
-type handleSelect = (value: number) =>void
 export function UpdateRole({ user }: { user: User }) {
   const queryClient = useQueryClient()
   const [updateUserRole, setUpdateUserRole] = useState({
@@ -40,7 +38,6 @@ export function UpdateRole({ user }: { user: User }) {
     }
   }
   const handleUpdate = async () => {
-    console.log(updateUserRole)
     await updateUser()
     queryClient.invalidateQueries({ queryKey: ["user"] })
   }

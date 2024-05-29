@@ -10,19 +10,10 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { ROLE, User } from "@/types/Index"
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue
-} from "./ui/select"
+import {  User } from "@/types/Index"
 import api from "@/api"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { ChangeEvent, useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 
 export function EditUser({ user }: { user: User }) {
   const queryClient = useQueryClient()
@@ -45,18 +36,9 @@ export function EditUser({ user }: { user: User }) {
   }
 
   const handleUpdate = async () => {
-    // console.log(updatedUser)
     await updateUser()
     queryClient.invalidateQueries({ queryKey: ["user"] })
   }
-
-    // const handleSelect = (value: string) => {
-    //   setUpdatedUser({
-    //     ...updatedUser,
-    //     role: value
-    //   })
-    // }
-
   return (
     <Dialog>
       <DialogTrigger asChild>

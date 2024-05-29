@@ -32,17 +32,15 @@ export function EditProduct({ product }: { product: TypeProduct }) {
       const res = await api.patch(`/product/${product.id}`, updatedProduct)
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
-  
+
   const getCategories = async () => {
     try {
       const res = await api.get("/category")
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }
@@ -73,7 +71,6 @@ export function EditProduct({ product }: { product: TypeProduct }) {
     })
   }
   const handleUpdate = async () => {
-    console.log(updatedProduct)
     await updateProduct()
     queryClient.invalidateQueries({ queryKey: ["productNoneJoin"] })
   }

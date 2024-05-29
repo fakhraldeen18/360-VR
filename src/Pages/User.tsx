@@ -44,7 +44,6 @@ export function Customer() {
       })
       return res.data
     } catch (error) {
-      console.error(error)
       return Promise.reject(new Error("Something went wrong"))
     }
   }

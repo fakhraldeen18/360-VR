@@ -46,6 +46,7 @@ export function Nav() {
     const curGroup = acc[key] ?? []
     return { ...acc, [key]: [...curGroup, obj] }
   }, {} as { [key: string]: TypeProductInvent[] })
+
   const keys = Object.keys(groups)
   const total = state.cart.reduce((acc, curr) => {
     return acc + curr.price
@@ -65,7 +66,7 @@ export function Nav() {
         color="blue-gray"
         className="flex items-center gap-x-2 p-1 font-medium opacity-80 transition-opacity hover:opacity-100"
       >
-        <Link to="/products" className="flex items-center">
+        <Link to="/productCate" className="flex items-center">
           Product
         </Link>
       </Typography>
@@ -192,7 +193,9 @@ export function Nav() {
                       <p className="text-sm font-medium">SR {total}</p>
                     </div>
                     <Button className="w-full" onClick={() => setOpenCart(false)}>
-                      <Link to="/checkout">Checkout</Link>
+                      <Link className="w-full" to="/checkout">
+                        Checkout
+                      </Link>
                     </Button>
                   </div>
                 )}
