@@ -8,7 +8,7 @@ export function ContactUs() {
   return (
     <div className=" flex flex-col justify-between">
       <></>
-      <div className="container mx-auto py-12 px-4 md:px-6 lg:mt-40">
+      <div className="container mx-auto py-12 px-4 md:px-6 lg:mt-16">
         <div className="max-w-2xl mx-auto space-y-6">
           <div className="text-center space-y-2">
             <h1 className="text-3xl font-bold">Contact Us</h1>

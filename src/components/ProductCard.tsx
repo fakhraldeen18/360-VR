@@ -11,7 +11,7 @@ import { Input } from "./ui/input"
 
 export function ProductCards() {
   const context = useContext(GlobalContext)
-  if (!context) throw Error("COntext is missing")
+  if (!context) throw Error("Context is missing")
   const { handleAddCart } = context
   const queryClient = useQueryClient()
   const [searchParams, setSearchParams] = useSearchParams()

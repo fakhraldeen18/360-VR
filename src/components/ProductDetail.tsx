@@ -69,7 +69,7 @@ export default function ProductDetail() {
     <>
       <div className="flex flex-col justify-between">
         <></>
-        <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 mt-60">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6 mt-20 md:mt-40">
           <div className="grid grid-cols-1 gap-4">
             <img
               alt="Product Image"
@@ -166,7 +166,7 @@ export default function ProductDetail() {
         </div>
       </div>
 
-      <h1 className="flex text-5xl underline decoration-[#6d28d9e6] ml-10 mt-20">
+      <h1 className="flex text-center text-5xl underline decoration-[#6d28d9e6]  md:ml-20 mt-20">
         Similar Products
       </h1>
       <section className="w-fit mx-auto grid grid-cols-1 lg:grid-cols-4 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10">

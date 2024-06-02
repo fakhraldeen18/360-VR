@@ -39,7 +39,11 @@ export default function Footer() {
           Reserved.
         </Typography>
         <div className="flex gap-4 text-blue-gray-900 sm:justify-center">
-          <Typography as="a" href="#" className="opacity-80 transition-opacity hover:opacity-100">
+          <Typography
+            as="a"
+            href="https://github.com/fakhraldeen18"
+            className="opacity-80 transition-opacity hover:opacity-100"
+          >
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path
                 fillRule="evenodd"
@@ -48,7 +52,11 @@ export default function Footer() {
               />
             </svg>
           </Typography>
-          <Typography as="a" href="#" className="opacity-80 transition-opacity hover:opacity-100">
+          <Typography
+            as="a"
+            href="https://www.linkedin.com/in/fakhrdeenalfallatah/"
+            className="opacity-80 transition-opacity hover:opacity-100"
+          >
             <svg className="h-7 w-7" fill="currentColor" viewBox="0 0 24 21" aria-hidden="true">
               <path
                 fillRule="evenodd"

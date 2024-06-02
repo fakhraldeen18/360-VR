@@ -53,8 +53,8 @@ export function Login() {
   return (
     <div className=" flex flex-col justify-between">
       <></>
-         <form  onSubmit={handleSubmit}>
-      <Card className="mx-auto max-w-sm lg:mt-72">
+         <form className="mr-8"  onSubmit={handleSubmit}>
+      <Card className="mx-auto max-w-sm mt-10 lg:mt-32 ml-10 md:ml-auto">
         <CardHeader>
           <CardTitle className="text-2xl">Login</CardTitle>
           <CardDescription>Enter your email below to login to your account</CardDescription>

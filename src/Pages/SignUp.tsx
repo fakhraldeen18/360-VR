@@ -39,8 +39,8 @@ export function SignUp() {
   return (
     <div className=" flex flex-col justify-between">
       <></>
-      <form onSubmit={handleSubmit}>
-        <Card className="mx-auto max-w-sm lg:mt-32">
+      <form className="mr-8" onSubmit={handleSubmit}>
+        <Card className="mx-auto max-w-sm mt-10 lg:mt-20 ml-10 md:ml-auto">
           <CardHeader>
             <CardTitle className="text-xl">Sign Up</CardTitle>
             <CardDescription>Enter your information to create an account</CardDescription>
