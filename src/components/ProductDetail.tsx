@@ -16,11 +16,13 @@ import { useContext, useState } from "react"
 import { GlobalContext } from "@/App"
 import { Card, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { CardBody, Typography } from "@material-tailwind/react"
+import { ToastAction } from "./ui/toast"
+import { toast } from "./ui/use-toast"
 
 export default function ProductDetail() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("Context is missing")
-  const { handleAddCart } = context
+  const { handleAddCart, handelDeleteItemFromCart } = context
 
   const params = useParams()
 
@@ -155,6 +157,17 @@ export default function ProductDetail() {
                 size="lg"
                 onClick={() => {
                   Array.from(Array(quantity).keys()).map((item) => {
+                    toast({
+                      title: "The product successfully added to cart",
+                      action: (
+                        <ToastAction
+                          onClick={() => handelDeleteItemFromCart(product.inventoryId)}
+                          altText="Undo"
+                        >
+                          Undo
+                        </ToastAction>
+                      )
+                    })
                     handleAddCart(product)
                   })
                 }}
@@ -203,7 +216,23 @@ export default function ProductDetail() {
                   Details
                 </Link>
               </Button>
-              <Button disabled={product.quantity === 0} onClick={() => handleAddCart(product)}>
+              <Button
+                disabled={product.quantity === 0}
+                onClick={() => {
+                  toast({
+                    title: "The product successfully added to cart",
+                    action: (
+                      <ToastAction
+                        onClick={() => handelDeleteItemFromCart(product.inventoryId)}
+                        altText="Undo"
+                      >
+                        Undo
+                      </ToastAction>
+                    )
+                  })
+                  handleAddCart(product)
+                }}
+              >
                 {product.quantity > 0 ? "Add to cart" : "Out of stock"}
               </Button>
             </CardFooter>

@@ -1,5 +1,16 @@
 import { Button } from "@/components/ui/button"
 export function HeroBanner() {
+
+    const scrollToBottom = () => {
+      if (typeof window!== "undefined") {
+        window.scrollTo({
+          top: 900,
+          left: 0,
+          behavior: "smooth"
+        })
+      }
+    }
+
   return (
     <div className=" bg-hero-pattern bg-no-repeat bg-cover bg-origin-content bg-right h-screen">
       <section className="w-full">
@@ -13,8 +24,8 @@ export function HeroBanner() {
                 Discover a world of endless possibilities while browsing VR products
               </p>
               <div className="mt-5 flex justify-center gap-4">
-                <Button variant="default">Get Started</Button>
-                <Button variant="secondary">Learn More</Button>
+                <Button onClick={scrollToBottom} variant="default" >Get Started</Button>
+                <Button  variant="secondary">Learn More</Button>
               </div>
             </div>
           </div>

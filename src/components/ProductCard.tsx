@@ -8,15 +8,18 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { ChangeEvent, FormEvent, useContext, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { Input } from "./ui/input"
+import { useToast } from "@/components/ui/use-toast"
+import { ToastAction } from "./ui/toast"
 
 export function ProductCards() {
   const context = useContext(GlobalContext)
   if (!context) throw Error("Context is missing")
-  const { handleAddCart } = context
+  const { handleAddCart, handelDeleteItemFromCart } = context
   const queryClient = useQueryClient()
   const [searchParams, setSearchParams] = useSearchParams()
   const defaultSearch = searchParams.get("searchBy") || ""
   const [searchBy, setSearchBy] = useState(defaultSearch)
+  const { toast } = useToast()
   const scrollToTop = () => {
     if (typeof window !== "undefined") {
       window.scrollTo({
@@ -80,7 +83,7 @@ export function ProductCards() {
             className="w-72 shadow-md rounded-xl duration-500 hover:scale-105 hover:shadow-xl"
           >
             <CardHeader className="h-30">
-              <Link to={`/products/${product.inventoryId}`}>
+              <Link onClick={scrollToTop} to={`/products/${product.inventoryId}`}>
                 <img
                   src={product.image}
                   alt={product.name}
@@ -107,7 +110,23 @@ export function ProductCards() {
                   Details
                 </Link>
               </Button>
-              <Button disabled={product.quantity===0} onClick={() => handleAddCart(product)}>
+              <Button
+                disabled={product.quantity === 0}
+                onClick={() => {
+                  toast({
+                    title: "The product successfully added to cart",
+                    action: (
+                      <ToastAction
+                        onClick={() => handelDeleteItemFromCart(product.inventoryId)}
+                        altText="Undo"
+                      >
+                        Undo
+                      </ToastAction>
+                    )
+                  })
+                  handleAddCart(product)
+                }}
+              >
                 {product.quantity > 0 ? "Add to cart" : "Out of stock"}
               </Button>
             </CardFooter>

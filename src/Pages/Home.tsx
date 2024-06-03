@@ -1,6 +1,6 @@
 import { HeroBanner } from "@/components/HeroBanner"
+import OurPartners from "@/components/OurPartners"
 import { ProductCards } from "@/components/ProductCard"
-
 
 export function Home() {
   return (
@@ -12,6 +12,7 @@ export function Home() {
         </h1>
       </div>
       <ProductCards />
+      <OurPartners />
     </>
   )
 }

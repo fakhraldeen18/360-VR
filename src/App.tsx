@@ -21,7 +21,9 @@ import { Inventory } from "./Pages/Inventory"
 import { CustomerProfile } from "./Pages/CustomerProfile"
 import { Checkout } from "./Pages/Checkout"
 import { ContactUs } from "./components/ContactUs"
+import { Toaster } from "@/components/ui/toaster"
 import ProductCate from "./components/ProductCate"
+import Summary from "./Pages/Summary"
 
 export type GlobalContextType = {
   state: GlobalState
@@ -115,6 +117,7 @@ function App() {
         {state.user?.role === ROLE.Customer || !state.user ? (
           <BrowserRouter>
             <Nav />
+            <Toaster />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/products" element={<ProductCards />} />
@@ -173,6 +176,7 @@ function App() {
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/contactUs" element={<ContactUs />} />
               <Route path="/productCate" element={<ProductCate />} />
+              <Route path="/summary" element={<Summary />} />
               <Route path="/products/:productID" element={<ProductDetail />} />
             </Routes>
             <Footer />

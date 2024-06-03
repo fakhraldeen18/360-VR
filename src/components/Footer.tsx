@@ -26,7 +26,7 @@ export default function Footer() {
             Home
           </Link>
           <Link onClick={scrollToTop} className="hover:underline" to="/contactUs">
-            Contact
+            Contact Us
           </Link>
         </nav>
       </div>

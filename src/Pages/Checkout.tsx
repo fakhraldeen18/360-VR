@@ -15,6 +15,7 @@ import { useContext, useState } from "react"
 import { GlobalContext } from "@/App"
 import { TypeProductInvent } from "@/types/Index"
 import api from "@/api"
+import { Link, Navigate } from "react-router-dom"
 
 type OrderItems = {
   productId: string
@@ -33,7 +34,6 @@ export function Checkout() {
   if (!context) throw Error("Context is missing")
   const {
     state,
-    handelDeleteItemFromCart,
     handleAddCart,
     handleDeleteOneFromCart,
     handleRemoveCart
@@ -226,7 +226,7 @@ export function Checkout() {
           </Card>
           <div className="flex justify-start mt-4">
             <Button size="lg" onClick={handleCheckout} disabled={state.cart.length === 0}>
-              Place Order
+              <Link to="/summary">Place Order</Link>
             </Button>
           </div>
         </div>

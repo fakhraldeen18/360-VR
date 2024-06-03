@@ -1,7 +1,17 @@
 import React, { useContext } from "react"
 import { Navbar, Typography, IconButton, Collapse } from "@material-tailwind/react"
 import { Link } from "react-router-dom"
-import { Home, MinusIcon, Package, PanelLeft, PlusIcon, ShoppingCartIcon, TrashIcon, Type, UserIcon } from "lucide-react"
+import {
+  Home,
+  MinusIcon,
+  Package,
+  PanelLeft,
+  PlusIcon,
+  ShoppingCartIcon,
+  TrashIcon,
+  Type,
+  UserIcon
+} from "lucide-react"
 
 import { GlobalContext } from "@/App"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
@@ -17,6 +27,7 @@ import {
   DropdownMenuTrigger
 } from "./ui/dropdown-menu"
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet"
+import { toast } from "./ui/use-toast"
 
 type OrderItems = {
   productId: string
@@ -67,6 +78,16 @@ export function Nav() {
         color="blue-gray"
         className="flex items-center gap-x-2 p-1 font-medium opacity-80 transition-opacity hover:opacity-100"
       >
+        <Link to="/" className="flex items-center">
+          Home
+        </Link>
+      </Typography>
+      <Typography
+        as="li"
+        variant="small"
+        color="blue-gray"
+        className="flex items-center gap-x-2 p-1 font-medium opacity-80 transition-opacity hover:opacity-100"
+      >
         <Link to="/productCate" className="flex items-center">
           Product
         </Link>
@@ -79,16 +100,6 @@ export function Nav() {
       >
         <Link to="/contactUs" className="flex items-center">
           Contact Us
-        </Link>
-      </Typography>
-      <Typography
-        as="li"
-        variant="small"
-        color="blue-gray"
-        className="flex items-center gap-x-2 p-1 font-medium opacity-80 transition-opacity hover:opacity-100"
-      >
-        <Link to="#" className="flex items-center">
-          About
         </Link>
       </Typography>
     </ul>
@@ -105,175 +116,6 @@ export function Nav() {
     })
   })
   return (
-    // <Navbar className="mx-auto max-w-screen-x2 px-4 py-2 lg:px-8 lg:py-4 border-0 shadow-none absolute top-0 z-10 flex-row justify-between mt-3 mb-28">
-    //   <div className="container mx-auto flex items-center justify-between ">
-    //     <Link to="/">
-    //       <img src={logoImage} alt="logo" className="w-12 h-12 rounded-full " />
-    //     </Link>
-    //     <div className="hidden lg:block">{navList}</div>
-    //     <div className="flex items-center gap-x-1 justify-end">
-    //       <section className="hidden lg:inline-block">
-    //         <Popover open={openCart} onOpenChange={setOpenCart}>
-    //           <PopoverTrigger asChild className="  items-center ">
-    //             {keys.length == 0 ? (
-    //               <Link className="pt-1 rounded-full hidden lg:inline-block" to="#">
-    //                 <ShoppingCartIcon className="h-6 w-6" />
-    //               </Link>
-    //             ) : (
-    //               <Link className="pt-5 rounded-full hidden lg:inline-block" to="#">
-    //                 <ShoppingCartIcon className="h-6 w-6" />
-    //                 <span className="relative -top-10 -right-2 rounded-full bg-[#6d28d9e6] opacity-75 text-white text-xs px-2 py-1">
-    //                   {keys.length}
-    //                 </span>
-    //               </Link>
-    //             )}
-    //           </PopoverTrigger>
-    //           <PopoverContent align="end" className="w-90 p-4">
-    //             {state.cart.length === 0 ? (
-    //               <p>No Items</p>
-    //             ) : (
-    //               <div className="flex flex-col gap-4">
-    //                 <div className="flex items-center justify-between">
-    //                   <h3 className="text-lg font-medium">Your Cart</h3>
-    //                 </div>
-    //                 {keys.map((key) => {
-    //                   const products = groups[key]
-    //                   const product = products[0]
-    //                   const total = products.reduce((acc, curr) => {
-    //                     return acc + curr.price
-    //                   }, 0)
-    //                   return (
-    //                     <div key={product.inventoryId} className="flex flex-col gap-4">
-    //                       <div className="flex items-center gap-4">
-    //                         <img
-    //                           alt="Product Image"
-    //                           className="rounded-md"
-    //                           height={80}
-    //                           src={product.image}
-    //                           style={{
-    //                             aspectRatio: "80/80",
-    //                             objectFit: "cover"
-    //                           }}
-    //                           width={80}
-    //                         />
-    //                         <div className="flex-1 text-center">
-    //                           <h4 className="font-small text-left text">{product.name}</h4>
-    //                           <p className="text-sm text-gray-500 dark:text-gray-400">SR {total}</p>
-    //                         </div>
-    //                         <div className="flex items-center gap-2">
-    //                           <Button
-    //                             size="icon"
-    //                             variant="ghost"
-    //                             onClick={() => handleDeleteOneFromCart(product.inventoryId)}
-    //                           >
-    //                             <MinusIcon className="h-4 w-4" />
-    //                           </Button>
-    //                           <span>{products.length}</span>
-    //                           <Button
-    //                             size="icon"
-    //                             variant="ghost"
-    //                             onClick={() => handleAddCart(product)}
-    //                           >
-    //                             <PlusIcon className="h-4 w-4" />
-    //                           </Button>
-    //                           <Button
-    //                             className="text-red-600"
-    //                             size="icon"
-    //                             variant="ghost"
-    //                             onClick={() => handelDeleteItemFromCart(product.inventoryId)}
-    //                           >
-    //                             <TrashIcon className="h-4 w-4 text-red-600" />
-    //                           </Button>
-    //                         </div>
-    //                       </div>
-    //                     </div>
-    //                   )
-    //                 })}
-    //                 <div className="flex items-center justify-between">
-    //                   <p className="text-sm font-medium">Total</p>
-    //                   <p className="text-sm font-medium">SR {total}</p>
-    //                 </div>
-    //                 <Button className="w-full" onClick={() => setOpenCart(false)}>
-    //                   <Link className="w-full" to="/checkout">
-    //                     Checkout
-    //                   </Link>
-    //                 </Button>
-    //               </div>
-    //             )}
-    //           </PopoverContent>
-    //         </Popover>
-    //       </section>
-    //       <DropdownMenu>
-    //         <DropdownMenuTrigger asChild>
-    //           <Typography className="p-2  hover:bg-slate-900 dark:hover:bg-gray-800 rounded-full hidden lg:inline-block">
-    //             <UserIcon className="h-6 w-6" />
-    //             <span className="sr-only">Login</span>
-    //           </Typography>
-    //         </DropdownMenuTrigger>
-    //         <DropdownMenuContent align="end">
-    //           {!state.user ? (
-    //             <DropdownMenuLabel>My Account</DropdownMenuLabel>
-    //           ) : (
-    //             <DropdownMenuLabel>{state.user?.name}</DropdownMenuLabel>
-    //           )}
-    //           <DropdownMenuSeparator />
-    //           <Link to="/customerProfile">
-    //             <DropdownMenuItem>profile</DropdownMenuItem>
-    //           </Link>
-    //           <DropdownMenuSeparator />
-    //           {!state.user ? (
-    //             <>
-    //               <Link to="/signup">
-    //                 <DropdownMenuItem>SignUp</DropdownMenuItem>
-    //               </Link>
-    //               <Link to="/login">
-    //                 <DropdownMenuItem>LogIn</DropdownMenuItem>
-    //               </Link>
-    //             </>
-    //           ) : (
-    //             <Link to="/login">
-    //               <DropdownMenuItem onClick={handleLogOut}>Logout</DropdownMenuItem>
-    //             </Link>
-    //           )}
-    //         </DropdownMenuContent>
-    //       </DropdownMenu>
-    //     </div>
-    //     <IconButton
-    //       variant="text"
-    //       className="ml-auto h-6 w-6 text-inherit hover:bg-transparent focus:bg-transparent active:bg-transparent lg:hidden"
-    //       ripple={false}
-    //       onClick={() => setOpenNav(!openNav)}
-    //     >
-    //       {openNav ? (
-    //         <svg
-    //           xmlns="http://www.w3.org/2000/svg"
-    //           fill="none"
-    //           className="h-6 w-6"
-    //           viewBox="0 0 24 24"
-    //           stroke="currentColor"
-    //           strokeWidth={2}
-    //         >
-    //           <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-    //         </svg>
-    //       ) : (
-    //         <svg
-    //           xmlns="http://www.w3.org/2000/svg"
-    //           className="h-6 w-6"
-    //           fill="none"
-    //           stroke="currentColor"
-    //           strokeWidth={2}
-    //         >
-    //           <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-    //         </svg>
-    //       )}
-    //     </IconButton>
-    //   </div>
-    //   <Collapse open={openNav}>
-    //     <div className="container mx-auto bg-zinc-950 flex flex-col">
-    //       {navList}
-    //     </div>
-    //   </Collapse>
-    // </Navbar>
     <header className="top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto  sm:border-0 sm:bg-transparent sm:px-6 mt-5 text-end">
       <Sheet>
         <SheetTrigger asChild>
@@ -367,7 +209,7 @@ export function Nav() {
                                 SR {total}
                               </p>
                             </div>
-                            <div className="flex items-center justify-between md:gap-2">
+                            <div className="flex text-center items-center justify-between md:gap-2">
                               <Button
                                 size="icon"
                                 variant="ghost"
@@ -384,10 +226,17 @@ export function Nav() {
                                 <PlusIcon className="h-4 w-4" />
                               </Button>
                               <Button
-                                className="text-red-600 hidden md:inline-block"
+                                className="hidden md:inline-block"
+                                style={{ textAlign: "-webkit-center" }}
                                 size="icon"
                                 variant="ghost"
-                                onClick={() => handelDeleteItemFromCart(product.inventoryId)}
+                                onClick={() => {
+                                   toast({
+                                    variant:"destructive",
+                                     title: "The product has been deleted"
+                                   })
+                                  handelDeleteItemFromCart(product.inventoryId)
+                                }}
                               >
                                 <TrashIcon className="h-4 w-4 text-red-600" />
                               </Button>
@@ -401,7 +250,7 @@ export function Nav() {
                       <p className=" text-xs md:text-sm font-medium">SR {total}</p>
                     </div>
                     <Button className="w-full" onClick={() => setOpenCart(false)}>
-                      <Link className="w-full" to="/checkout">
+                      <Link className="w-full" to={state.user ? "/checkout" : "/login"}>
                         Checkout
                       </Link>
                     </Button>
