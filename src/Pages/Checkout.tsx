@@ -15,7 +15,7 @@ import { useContext, useState } from "react"
 import { GlobalContext } from "@/App"
 import { TypeProductInvent } from "@/types/Index"
 import api from "@/api"
-import { Link, Navigate } from "react-router-dom"
+import { Link } from "react-router-dom"
 
 type OrderItems = {
   productId: string
@@ -71,6 +71,11 @@ export function Checkout() {
       })
       if (res.status === 201) {
         handleRemoveCart()
+        window.scroll({
+          top: 0,
+          left: 0,
+          behavior: "smooth"
+        })
       }
       return res.data
     } catch (error) {

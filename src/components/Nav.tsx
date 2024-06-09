@@ -1,5 +1,5 @@
 import React, { useContext } from "react"
-import { Navbar, Typography, IconButton, Collapse } from "@material-tailwind/react"
+import { Typography } from "@material-tailwind/react"
 import { Link } from "react-router-dom"
 import {
   Home,
@@ -231,10 +231,10 @@ export function Nav() {
                                 size="icon"
                                 variant="ghost"
                                 onClick={() => {
-                                   toast({
-                                    variant:"destructive",
-                                     title: "The product has been deleted"
-                                   })
+                                  toast({
+                                    variant: "destructive",
+                                    title: "The product has been deleted"
+                                  })
                                   handelDeleteItemFromCart(product.inventoryId)
                                 }}
                               >
